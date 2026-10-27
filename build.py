@@ -188,13 +188,13 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
 <meta property="og:image" content="{cfg['site_url']}/assets/img/og-image.png">
 <meta property="og:site_name" content="{e(cfg['business_name'])}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0d1321">
+<meta name="theme-color" content="#000000">
 {verify}
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="{e(cfg['business_name'])} articles" href="/articles/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800&family=Roboto:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/style.css">
 {schema_html}
 </head>
@@ -203,7 +203,7 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
 <header class="site-header">
   <div class="wrap header-row">
     <a class="brand" href="/" aria-label="{e(cfg['business_name'])} home">
-      <img src="/assets/img/logo.svg" alt="" width="44" height="44">
+      <img src="/assets/img/logo.svg" alt="" width="52" height="44">
       <span class="brand-text">Lockman <b>ASAP</b></span>
     </a>
     <button class="menu-btn" aria-expanded="false" aria-controls="site-nav">
@@ -304,7 +304,7 @@ def home(cfg, articles):
     body = f"""<section class="hero halftone">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="burst" aria-hidden="true">ASAP!</p>
+      <p class="burst">Fast mobile locksmith</p>
       <h1 class="comic">San Francisco Locksmith, on the way when you're locked out</h1>
       <p class="lead">Lockouts, broken keys and lock repair. A licensed mobile locksmith who comes to you anywhere in {e(cfg['city'])}.</p>
       <div class="btn-row">
