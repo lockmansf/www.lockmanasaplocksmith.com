@@ -7,6 +7,7 @@ Reads config.json and content/articles/*.json. Uses only the Python standard lib
 import datetime as dt
 import html
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -616,6 +617,9 @@ def rss(cfg, articles):
 # ---------------------------------------------------------------- main
 
 def write(rel, content):
+    base = load_config().get("base_path", "").rstrip("/")
+    if base and rel.endswith((".html", "/")):
+        content = re.sub(r'(href|src)="/(?!/)', rf'\1="{base}/', content)
     out = DIST / rel.lstrip("/")
     if rel.endswith("/"):
         out = out / "index.html"

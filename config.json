@@ -2,6 +2,8 @@
   "_note": "Fill every value that starts with TODO. The build prints a warning for each TODO left.",
   "business_name": "Lockman ASAP Locksmith",
   "site_url": "https://lockmanasaplocksmith.com",
+  "_base_path_note": "Preview only. Set base_path to an empty string once the domain points to GitHub Pages.",
+  "base_path": "/www.lockmanasaplocksmith.com",
   "phone_display": "TODO (415) 000-0000",
   "phone_e164": "TODO +14150000000",
   "whatsapp_number": "TODO 14150000000",
