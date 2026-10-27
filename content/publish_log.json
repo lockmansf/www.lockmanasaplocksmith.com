@@ -1,0 +1,11 @@
+{
+  "days": {
+    "2026-10-27": {
+      "target_hour": 20,
+      "attempts": 0,
+      "published": null,
+      "failures": []
+    }
+  },
+  "used_topics": []
+}
