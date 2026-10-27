@@ -1,0 +1,37 @@
+{
+  "_note": "Fill every value that starts with TODO. The build prints a warning for each TODO left.",
+  "business_name": "Lockman ASAP Locksmith",
+  "site_url": "https://lockmanasaplocksmith.com",
+  "phone_display": "TODO (415) 000-0000",
+  "phone_e164": "TODO +14150000000",
+  "whatsapp_number": "TODO 14150000000",
+  "whatsapp_message": "Hi Lockman, I need a locksmith.",
+  "email": "TODO you@example.com",
+  "license_number": "TODO LCO 0000",
+  "city": "San Francisco",
+  "region": "CA",
+  "hours_text": "TODO Mon-Sun, 7am-11pm",
+  "opening_hours_schema": [],
+  "service_areas": [
+    "Mission District", "SoMa", "Nob Hill", "Pacific Heights", "Marina",
+    "Richmond District", "Sunset District", "Noe Valley", "Castro",
+    "Haight-Ashbury", "Bernal Heights", "Potrero Hill", "Dogpatch",
+    "Financial District", "North Beach", "Excelsior", "Bayview", "Presidio Heights"
+  ],
+  "google_analytics_id": "TODO G-XXXXXXXXXX",
+  "google_site_verification": "",
+  "articles": {
+    "auto_publish": true,
+    "gemini_model": "gemini-3.6-flash",
+    "publish_window_start_hour": 8,
+    "publish_window_end_hour": 20,
+    "timezone": "America/Los_Angeles",
+    "max_attempts_per_day": 3,
+    "min_words": 700,
+    "internal_similarity_limit": 0.12,
+    "web_match_percent_limit": 5,
+    "web_match_words_limit": 25,
+    "recheck_per_week": 15,
+    "ai_disclosure": "This article was written with AI assistance and checked for originality before publishing."
+  }
+}
