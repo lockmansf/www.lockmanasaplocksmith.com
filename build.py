@@ -316,30 +316,6 @@ def article_card(a):
 
 MISSIONS = [
     {
-        "id": "bmw-trunk",
-        "title": "Keys locked in a BMW trunk at 2 AM",
-        "image": "mission-bmw-trunk",
-        "size": (1024, 1536),
-        "alt": "Comic story: Lockman opens a 2018 BMW in SoMa at 2 AM after the keys were locked in the trunk",
-        "summary": [
-            "After midnight, a customer's 2018 BMW keys were locked in the trunk outside her building in SoMa. The dealership could not help without the keys.",
-            "Lockman opened the car door without damage, carefully removed the door cylinder to get past the alarm system, opened the trunk and returned both keys.",
-        ],
-        "service": "car-lockout",
-    },
-    {
-        "id": "bank-file-cabinet",
-        "title": "Bank of the Orient: a high-security file cabinet lock",
-        "image": "mission-bank-file-cabinet",
-        "size": (1024, 1536),
-        "alt": "Comic story: Lockman opens a damaged high-security file cabinet lock for Bank of the Orient in San Francisco",
-        "summary": [
-            "Staff at Bank of the Orient in San Francisco needed important documents from a file cabinet whose high-security lock had failed from the inside.",
-            "Lockman inspected the lock, worked out the right approach, and opened it with professional tools without damaging the cabinet.",
-        ],
-        "service": "lock-repair",
-    },
-    {
         "id": "smart-gate",
         "title": "Custom smart gate upgrade",
         "image": "mission-smart-gate",
@@ -376,15 +352,11 @@ def missions_page(cfg):
   <a class="mission-art" href="/assets/img/{m['image']}.webp"><img src="/assets/img/{m['image']}.webp" srcset="/assets/img/{m['image']}-560.webp 560w, /assets/img/{m['image']}.webp {m['size'][0]}w" sizes="(max-width: 960px) 92vw, 560px" alt="{e(m['alt'])}" width="{m['size'][0]}" height="{m['size'][1]}" loading="lazy"></a>
 </article>""")
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Lockman Missions</h1>
-<p class="lead">Real locksmith jobs around San Francisco, drawn as comics. Tap a comic to see it full size.</p></div></section>
+<p class="lead">Real locksmith jobs around San Francisco. Tap a picture to see it full size.</p></div></section>
 <section class="section"><div class="wrap missions">{''.join(blocks)}</div></section>
-<section class="section section-alt"><div class="wrap two-col">
-<div><img src="/assets/img/lockman-downhill-560.webp" alt="Comic art: Lockman skateboarding down Powell Street past a cable car, chasing runaway padlocks" width="560" height="699" loading="lazy"></div>
-<div><h2 class="comic">Downhill &amp; unstoppable</h2><p>Steep hills, cable cars and runaway locks. Wherever you are in San Francisco, Lockman gets there.</p></div>
-</div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/missions/", title="Lockman Missions: Real Locksmith Jobs in San Francisco",
-                description="Real San Francisco locksmith jobs drawn as comics: a BMW trunk lockout at 2 AM, a bank file cabinet, and a smart gate upgrade.",
+                description="Real San Francisco locksmith jobs from Lockman ASAP Locksmith, including a custom smart gate upgrade with a Lockly smart lock and door closer.",
                 body=body, crumbs=[("/", "Home"), ("/missions/", "Missions")])
 
 
@@ -537,7 +509,7 @@ def about(cfg):
 <li><h3>Careful work</h3><p>Non-destructive methods first, always.</p></li>
 </ul>
 </div>
-<aside class="panel logo-panel"><img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo" width="600" height="550" loading="lazy"><img class="about-comic" src="/assets/img/lockman-downhill-560.webp" alt="Comic art: Lockman skateboarding down Powell Street past a cable car" width="560" height="699" loading="lazy"></aside>
+<aside class="panel logo-panel"><img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo" width="600" height="550" loading="lazy"><img class="about-comic" src="/assets/img/lockman-takes-a-break-560.webp" alt="Comic art: Lockman, the locksmith superhero, relaxing by the Golden Gate Bridge" width="560" height="698" loading="lazy"></aside>
 </div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/about/", title="About Us", description="Meet Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco.",
