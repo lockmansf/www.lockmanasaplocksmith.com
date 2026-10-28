@@ -4,7 +4,7 @@ Static site for https://lockmanasaplocksmith.com, hosted free on GitHub Pages.
 
 ## Edit business details
 Fill every `TODO` value in `config.json` (phone, WhatsApp, license, email, hours, Google Analytics ID).
-Replace `assets/img/hero.svg` with your own artwork (keep the file name, or update `build.py`).
+The logo lives in `assets/img/` (`logo-full-600.webp`, `emblem.png`, `favicon.png`).
 
 ## Build locally
     python3 build.py        # output in dist/

@@ -131,7 +131,7 @@ def business_schema(cfg):
         "url": cfg["site_url"] + "/",
         "telephone": clean(cfg["phone_e164"]),
         "image": cfg["site_url"] + "/assets/img/og-image.png",
-        "logo": cfg["site_url"] + "/assets/img/logo.svg",
+        "logo": cfg["site_url"] + "/assets/img/logo-full-600.webp",
         "address": {"@type": "PostalAddress", "addressLocality": cfg["city"], "addressRegion": cfg["region"], "addressCountry": "US"},
         "areaServed": [{"@type": "City", "name": "San Francisco"}] + [{"@type": "Place", "name": f"{a}, San Francisco"} for a in cfg["service_areas"]],
         "hasOfferCatalog": {
@@ -203,7 +203,8 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#000000">
 {verify}
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/emblem.png">
 <link rel="alternate" type="application/rss+xml" title="{e(cfg['business_name'])} articles" href="/articles/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -216,7 +217,7 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
 <header class="site-header">
   <div class="wrap header-row">
     <a class="brand" href="/" aria-label="{e(cfg['business_name'])} home">
-      <img src="/assets/img/logo.svg" alt="" width="52" height="44">
+      <img src="/assets/img/emblem.png" alt="" width="56" height="40">
       <span class="brand-text">Lockman <b>ASAP</b></span>
     </a>
     <button class="menu-btn" aria-expanded="false" aria-controls="site-nav">
@@ -331,7 +332,7 @@ def home(cfg, articles):
       </ul>
     </div>
     <div class="hero-art">
-      <img src="/assets/img/hero.svg" alt="Lockman, the locksmith superhero, holding a giant key over the San Francisco skyline" width="560" height="560" fetchpriority="high">
+      <img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo: a gold superhero shield with a padlock" width="600" height="550" fetchpriority="high">
     </div>
   </div>
 </section>
@@ -439,7 +440,7 @@ def about(cfg):
 <li><h3>Careful work</h3><p>Non-destructive methods first, always.</p></li>
 </ul>
 </div>
-<aside class="panel"><img src="/assets/img/hero.svg" alt="Lockman superhero artwork" width="400" height="400" loading="lazy"></aside>
+<aside class="panel logo-panel"><img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo" width="600" height="550" loading="lazy"></aside>
 </div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/about/", title="About Us", description="Meet Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco.",
