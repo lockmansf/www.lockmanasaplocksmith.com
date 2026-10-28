@@ -7,7 +7,7 @@ import urllib.request
 API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 PROMPT = """You write articles for the website of Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco, California.
-Services: lockout service, broken key extraction, lock repair.
+Services: home, business and car lockouts, broken key extraction, lock repair.
 
 Write ONE new, completely original article.
 {topic_line}

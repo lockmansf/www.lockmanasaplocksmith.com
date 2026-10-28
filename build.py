@@ -48,15 +48,28 @@ def load_articles():
 SERVICES = [
     {
         "slug": "lockout",
-        "name": "Lockout Service",
+        "name": "Home & Business Lockout",
         "short": "Locked out of your home or business? We get you back inside without damaging the door.",
-        "title": "Lockout Service in San Francisco",
+        "title": "Home & Business Lockout Service in San Francisco",
         "intro": "Being locked out is stressful, especially in the fog at night. Call us, tell us where you are, and a licensed locksmith comes to you to open the door the right way.",
         "points": [
             ("Non-destructive entry first", "We use picking and bypass tools before anything else, so in most cases your lock keeps working after we open it."),
             ("Proof of residence", "For your safety we ask for ID or proof that you live or work at the address before we open the door."),
             ("Clear price before we start", "We give you the price on the phone and confirm it on site before any work begins. No surprise add-ons."),
             ("Rekey or replace if needed", "Lost your keys? We can rekey the lock on the spot so the old keys stop working."),
+        ],
+    },
+    {
+        "slug": "car-lockout",
+        "name": "Car Lockout",
+        "short": "Keys locked in the car? We open your vehicle without damage, wherever you're parked in the city.",
+        "title": "Car Lockout Service in San Francisco",
+        "intro": "Keys on the seat, doors locked, car on a steep San Francisco street. Call us with your location and the make and model, and we come to you to open it safely.",
+        "points": [
+            ("No damage to doors or windows", "We use professional automotive entry tools designed to open the door without scratching paint or breaking glass."),
+            ("Proof of ownership", "For your protection we check ID and registration before we open a vehicle."),
+            ("Most makes and models", "Cars, SUVs, vans and trucks. Tell us the make, model and year when you call."),
+            ("Clear price before we start", "We give you the price on the phone and confirm it on site before any work begins."),
         ],
     },
     {
@@ -304,9 +317,9 @@ def home(cfg, articles):
     body = f"""<section class="hero halftone">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="burst">Fast mobile locksmith</p>
+      <p class="burst">24/7 mobile locksmith</p>
       <h1 class="comic">San Francisco Locksmith, on the way when you're locked out</h1>
-      <p class="lead">Lockouts, broken keys and lock repair. A licensed mobile locksmith who comes to you anywhere in {e(cfg['city'])}.</p>
+      <p class="lead">Home, business and car lockouts, broken keys and lock repair. A licensed mobile locksmith who comes to you anywhere in {e(cfg['city'])}.</p>
       <div class="btn-row">
         <a class="btn btn-call btn-lg" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
         <a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a>
@@ -325,7 +338,7 @@ def home(cfg, articles):
 <section class="section">
   <div class="wrap">
     <h2 class="comic">What we do</h2>
-    <div class="grid-3">{services}</div>
+    <div class="grid-4">{services}</div>
   </div>
 </section>
 <section class="section section-alt">
@@ -355,8 +368,8 @@ def home(cfg, articles):
 </section>
 {latest_section}
 {cta_block(cfg)}"""
-    return page(cfg, path="/", title=f"{cfg['business_name']} | San Francisco Locksmith: Lockouts, Broken Keys, Lock Repair",
-                description=f"Licensed mobile locksmith in San Francisco. Lockout service, broken key extraction and lock repair. Call {clean(cfg['phone_display'])} or WhatsApp us.",
+    return page(cfg, path="/", title=f"{cfg['business_name']} | 24/7 San Francisco Locksmith: Home & Car Lockouts",
+                description=f"Licensed 24/7 mobile locksmith in San Francisco. Home and car lockouts, broken key extraction and lock repair. Call {clean(cfg['phone_display'])} or WhatsApp us.",
                 body=body)
 
 
@@ -366,10 +379,10 @@ def services_index(cfg):
         for s in SERVICES)
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith Services in San Francisco</h1>
 <p class="lead">Everything we do, done on site by a licensed locksmith.</p></div></section>
-<section class="section"><div class="wrap grid-3">{cards}</div></section>
+<section class="section"><div class="wrap grid-4">{cards}</div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/services/", title="Locksmith Services in San Francisco",
-                description="Lockout service, broken key extraction and lock repair across San Francisco by a licensed mobile locksmith.",
+                description="Home and car lockouts, broken key extraction and lock repair across San Francisco by a licensed mobile locksmith.",
                 body=body, crumbs=[("/", "Home"), ("/services/", "Services")])
 
 
