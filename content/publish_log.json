@@ -24,9 +24,25 @@
     },
     "2026-10-28": {
       "target_hour": 13,
-      "attempts": 0,
+      "attempts": 3,
       "published": null,
-      "failures": []
+      "failures": [
+        {
+          "at": "2026-10-28T13:51-07:00",
+          "topic": "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
+          "reason": "GEMINI_API_KEY is not set"
+        },
+        {
+          "at": "2026-10-28T13:51-07:00",
+          "topic": "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
+          "reason": "GEMINI_API_KEY is not set"
+        },
+        {
+          "at": "2026-10-28T13:51-07:00",
+          "topic": "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
+          "reason": "GEMINI_API_KEY is not set"
+        }
+      ]
     }
   },
   "used_topics": []
