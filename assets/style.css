@@ -108,7 +108,6 @@ h2.comic { font-size: clamp(1.8rem, 4.2vw, 2.5rem); margin: 0 0 18px; }
   width: 100%; max-width: 520px; margin-left: auto;
   border: 3px solid var(--yellow); border-radius: var(--radius);
   box-shadow: 0 10px 40px rgba(242,194,0,.25); background: #fff;
-  padding: 28px;
 }
 .trust { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 10px; padding: 0; margin: 0; }
 .trust li {
@@ -230,4 +229,18 @@ h2.comic { font-size: clamp(1.8rem, 4.2vw, 2.5rem); margin: 0 0 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Missions */
+.mission-card { padding: 0; overflow: hidden; }
+.mission-card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
+.mission-card h3 { padding: 14px 18px 18px; margin: 0; }
+.missions { display: grid; gap: 56px; }
+.mission { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+.mission:nth-child(even) .mission-text { order: 2; }
+.mission-art img { width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); border: 3px solid var(--yellow); }
+.about-comic { margin-top: 18px; border-radius: var(--radius); }
+@media (max-width: 960px) {
+  .mission { grid-template-columns: 1fr; }
+  .mission:nth-child(even) .mission-text { order: 0; }
 }

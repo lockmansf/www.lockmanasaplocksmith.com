@@ -98,6 +98,19 @@ SERVICES = [
             ("Repair or replace, honestly", "If the lock is worth fixing, we fix it. If it is not, we tell you and show you the options."),
         ],
     },
+    {
+        "slug": "smart-locks-gates",
+        "name": "Smart Locks & Gate Hardware",
+        "short": "Keypad and smart lock installation, plus door closers for gates, done to fit your door.",
+        "title": "Smart Lock & Gate Hardware Installation in San Francisco",
+        "intro": "Upgrade a gate or front door with a keypad smart lock and a door closer that shuts it every time. We install the hardware to fit your property, including older San Francisco gates and doors.",
+        "points": [
+            ("Smart and keypad locks", "Installation of smart locks such as Lockly, so you can open with a code or your phone."),
+            ("Door and gate closers", "Surface-mounted closers so a gate swings shut smoothly and latches every time."),
+            ("Custom fit", "Older doors and metal gates often need adjustments. We fit the hardware to your door, not the other way around."),
+            ("Clear price before we start", "We look at the door, recommend the hardware and confirm the price before any work begins."),
+        ],
+    },
 ]
 
 
@@ -106,6 +119,7 @@ SERVICES = [
 def nav_links():
     return [
         ("/services/", "Services"),
+        ("/missions/", "Missions"),
         ("/service-area/", "Service Area"),
         ("/articles/", "Articles"),
         ("/about/", "About"),
@@ -298,6 +312,82 @@ def article_card(a):
 </article>"""
 
 
+# ---------------------------------------------------------------- missions
+
+MISSIONS = [
+    {
+        "id": "bmw-trunk",
+        "title": "Keys locked in a BMW trunk at 2 AM",
+        "image": "mission-bmw-trunk",
+        "size": (1024, 1536),
+        "alt": "Comic story: Lockman opens a 2018 BMW in SoMa at 2 AM after the keys were locked in the trunk",
+        "summary": [
+            "After midnight, a customer's 2018 BMW keys were locked in the trunk outside her building in SoMa. The dealership could not help without the keys.",
+            "Lockman opened the car door without damage, carefully removed the door cylinder to get past the alarm system, opened the trunk and returned both keys.",
+        ],
+        "service": "car-lockout",
+    },
+    {
+        "id": "bank-file-cabinet",
+        "title": "Bank of the Orient: a high-security file cabinet lock",
+        "image": "mission-bank-file-cabinet",
+        "size": (1024, 1536),
+        "alt": "Comic story: Lockman opens a damaged high-security file cabinet lock for Bank of the Orient in San Francisco",
+        "summary": [
+            "Staff at Bank of the Orient in San Francisco needed important documents from a file cabinet whose high-security lock had failed from the inside.",
+            "Lockman inspected the lock, worked out the right approach, and opened it with professional tools without damaging the cabinet.",
+        ],
+        "service": "lock-repair",
+    },
+    {
+        "id": "smart-gate",
+        "title": "Custom smart gate upgrade",
+        "image": "mission-smart-gate",
+        "size": (1100, 1374),
+        "alt": "Photos of a San Francisco gate upgraded with a Lockly smart lock and a surface-mounted door closer",
+        "summary": [
+            "A San Francisco gate got a Lockly smart lock for keypad and phone access, plus a surface-mounted door closer so it swings shut smoothly every time.",
+            "Both were fitted to the existing gate, with custom installation to match the property.",
+        ],
+        "service": "smart-locks-gates",
+    },
+]
+
+
+def mission_card(m):
+    return f"""<article class="card mission-card">
+  <a href="/missions/#{m['id']}"><img src="/assets/img/{m['image']}-560.webp" alt="{e(m['alt'])}" width="560" height="{round(560 * m['size'][1] / m['size'][0])}" loading="lazy"></a>
+  <h3><a href="/missions/#{m['id']}">{e(m['title'])}</a></h3>
+</article>"""
+
+
+def missions_page(cfg):
+    services = {s["slug"]: s for s in SERVICES}
+    blocks = []
+    for m in MISSIONS:
+        svc = services[m["service"]]
+        paras = "".join(f"<p>{e(p)}</p>" for p in m["summary"])
+        blocks.append(f"""<article class="mission" id="{m['id']}">
+  <div class="mission-text">
+    <h2 class="comic">{e(m['title'])}</h2>
+    {paras}
+    <p><a class="more" href="/services/{svc['slug']}/">About our {e(svc['name'].lower())} service</a></p>
+  </div>
+  <a class="mission-art" href="/assets/img/{m['image']}.webp"><img src="/assets/img/{m['image']}.webp" srcset="/assets/img/{m['image']}-560.webp 560w, /assets/img/{m['image']}.webp {m['size'][0]}w" sizes="(max-width: 960px) 92vw, 560px" alt="{e(m['alt'])}" width="{m['size'][0]}" height="{m['size'][1]}" loading="lazy"></a>
+</article>""")
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Lockman Missions</h1>
+<p class="lead">Real locksmith jobs around San Francisco, drawn as comics. Tap a comic to see it full size.</p></div></section>
+<section class="section"><div class="wrap missions">{''.join(blocks)}</div></section>
+<section class="section section-alt"><div class="wrap two-col">
+<div><img src="/assets/img/lockman-downhill-560.webp" alt="Comic art: Lockman skateboarding down Powell Street past a cable car, chasing runaway padlocks" width="560" height="699" loading="lazy"></div>
+<div><h2 class="comic">Downhill &amp; unstoppable</h2><p>Steep hills, cable cars and runaway locks. Wherever you are in San Francisco, Lockman gets there.</p></div>
+</div></section>
+{cta_block(cfg)}"""
+    return page(cfg, path="/missions/", title="Lockman Missions: Real Locksmith Jobs in San Francisco",
+                description="Real San Francisco locksmith jobs drawn as comics: a BMW trunk lockout at 2 AM, a bank file cabinet, and a smart gate upgrade.",
+                body=body, crumbs=[("/", "Home"), ("/missions/", "Missions")])
+
+
 # ---------------------------------------------------------------- pages
 
 def home(cfg, articles):
@@ -332,7 +422,7 @@ def home(cfg, articles):
       </ul>
     </div>
     <div class="hero-art">
-      <img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo: a gold superhero shield with a padlock" width="600" height="550" fetchpriority="high">
+      <img src="/assets/img/lockman-takes-a-break.webp" srcset="/assets/img/lockman-takes-a-break-560.webp 560w, /assets/img/lockman-takes-a-break.webp 1100w" sizes="(max-width: 960px) 90vw, 520px" alt="Comic art: Lockman, the locksmith superhero, relaxing with a coffee mug that says World's Best Locksmith, Golden Gate Bridge behind him" width="1100" height="1372" fetchpriority="high">
     </div>
   </div>
 </section>
@@ -365,6 +455,13 @@ def home(cfg, articles):
     <h2 class="comic">Serving all of San Francisco</h2>
     <p>{', '.join(e(a) for a in cfg['service_areas'])}, and every neighborhood in between.</p>
     <p><a class="more" href="/service-area/">See our service area</a></p>
+  </div>
+</section>
+<section class="section section-alt">
+  <div class="wrap">
+    <h2 class="comic">Lockman missions</h2>
+    <p>Real jobs from around San Francisco, told the Lockman way.</p>
+    <div class="grid-3">{''.join(mission_card(m) for m in MISSIONS)}</div>
   </div>
 </section>
 {latest_section}
@@ -440,7 +537,7 @@ def about(cfg):
 <li><h3>Careful work</h3><p>Non-destructive methods first, always.</p></li>
 </ul>
 </div>
-<aside class="panel logo-panel"><img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo" width="600" height="550" loading="lazy"></aside>
+<aside class="panel logo-panel"><img src="/assets/img/logo-full-600.webp" alt="Lockman ASAP Locksmith logo" width="600" height="550" loading="lazy"><img class="about-comic" src="/assets/img/lockman-downhill-560.webp" alt="Comic art: Lockman skateboarding down Powell Street past a cable car" width="560" height="699" loading="lazy"></aside>
 </div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/about/", title="About Us", description="Meet Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco.",
@@ -634,6 +731,8 @@ def write(rel, content):
     base = load_config().get("base_path", "").rstrip("/")
     if base and rel.endswith((".html", "/")):
         content = re.sub(r'(href|src)="/(?!/)', rf'\1="{base}/', content)
+        content = re.sub(r'srcset="([^"]*)"',
+                         lambda m: 'srcset="' + re.sub(r'(^|,\s*)/(?!/)', rf'\g<1>{base}/', m.group(1)) + '"', content)
     out = DIST / rel.lstrip("/")
     if rel.endswith("/"):
         out = out / "index.html"
@@ -660,6 +759,7 @@ def build():
     add("/services/", services_index(cfg))
     for s in SERVICES:
         add(f"/services/{s['slug']}/", service_page(cfg, s))
+    add("/missions/", missions_page(cfg))
     add("/service-area/", service_area(cfg))
     add("/about/", about(cfg))
     add("/contact/", contact(cfg))
