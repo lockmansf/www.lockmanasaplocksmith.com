@@ -244,3 +244,86 @@ h2.comic { font-size: clamp(1.8rem, 4.2vw, 2.5rem); margin: 0 0 18px; }
   .mission { grid-template-columns: 1fr; }
   .mission:nth-child(even) .mission-text { order: 0; }
 }
+
+/* Night sky with the Lockman signal */
+.hero { position: relative; overflow: hidden; isolation: isolate;
+  background: linear-gradient(180deg, #05070d 0%, #0b1020 55%, #151a26 100%); }
+.hero .wrap { position: relative; z-index: 2; }
+.sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.stars { position: absolute; inset: 0; opacity: .7;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 28% 8%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 44% 22%, #fff, transparent),
+    radial-gradient(1px 1px at 63% 12%, #fff, transparent),
+    radial-gradient(1px 1px at 78% 28%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 90% 6%, #fff, transparent),
+    radial-gradient(1px 1px at 8% 42%, #fff, transparent),
+    radial-gradient(1px 1px at 52% 38%, #fff, transparent);
+  animation: twinkle 6s ease-in-out infinite alternate; }
+.clouds { position: absolute; inset: -20% -50%; opacity: .55;
+  background:
+    radial-gradient(ellipse 22% 9% at 20% 30%, rgba(120,130,150,.35), transparent 70%),
+    radial-gradient(ellipse 28% 10% at 60% 22%, rgba(110,120,140,.30), transparent 70%),
+    radial-gradient(ellipse 25% 8% at 85% 45%, rgba(120,130,150,.28), transparent 70%),
+    radial-gradient(ellipse 30% 11% at 35% 60%, rgba(90,100,120,.25), transparent 70%);
+  animation: drift 70s linear infinite; }
+.beam { position: absolute; bottom: -12%; width: 220px; height: 150%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(to top, rgba(255,236,170,.30), rgba(255,236,170,.06) 70%, transparent);
+  clip-path: polygon(46% 100%, 54% 100%, 100% 0, 0 0);
+  filter: blur(4px);
+  animation: sweep 16s ease-in-out infinite alternate; }
+.beam.b1 { left: 8%; }
+.beam.b2 { left: 48%; animation-duration: 21s; animation-delay: -7s; opacity: .7; }
+
+.signal-stage { position: relative; min-height: 380px; display: grid; place-items: center; }
+.signal-beam { position: absolute; left: 50%; bottom: -60px; width: 70%; height: 120%;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, rgba(255,236,170,.32), rgba(255,236,170,.08));
+  clip-path: polygon(47% 100%, 53% 100%, 80% 40%, 20% 40%);
+  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent 85%);
+  mask-image: linear-gradient(to top, #000 40%, transparent 85%);
+  filter: blur(8px); z-index: 0; }
+.signal { position: relative; z-index: 1; width: min(440px, 100%); height: auto;
+  filter: drop-shadow(0 0 30px rgba(255,220,120,.55));
+  animation: hover 9s ease-in-out infinite, flicker 7s steps(1) infinite; }
+
+@keyframes sweep { from { transform: rotate(-28deg); } to { transform: rotate(28deg); } }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(25%); } }
+@keyframes twinkle { from { opacity: .45; } to { opacity: .85; } }
+@keyframes hover {
+  0%, 100% { transform: translate(0, 0) rotate(-1.5deg); }
+  50% { transform: translate(-10px, -12px) rotate(1.5deg); } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 91% { opacity: .82; } 92% { opacity: 1; } 95% { opacity: .9; } }
+
+/* Meet Lockman */
+.meet { background: #0b0b0b; color: #f1f1f1; }
+.meet h2 { color: var(--yellow); }
+.meet-art img { border-radius: var(--radius); border: 3px solid var(--yellow); box-shadow: 0 10px 40px rgba(242,194,0,.2); }
+
+/* Theme music toggle: bottom left, WhatsApp stays on the right */
+.music-btn {
+  position: fixed; left: 18px; bottom: 18px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 48px; padding: 0 16px; border-radius: 999px;
+  background: #0b0b0b; color: var(--yellow);
+  border: 2px solid var(--yellow); font: 700 .95rem var(--font-body); cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+}
+.music-btn[aria-pressed="true"] { background: var(--yellow); color: #000; }
+.music-btn[aria-pressed="true"] svg { animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.18); } }
+.cookie:not([hidden]) ~ .music-btn { display: none; }
+
+@media (max-width: 960px) {
+  .signal-stage { min-height: 240px; margin-top: 8px; }
+  .beam { width: 140px; }
+}
+@media (max-width: 620px) {
+  .music-label { display: none; }
+  .music-btn { padding: 0; width: 52px; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stars, .clouds, .beam, .signal, .music-btn svg { animation: none !important; }
+}

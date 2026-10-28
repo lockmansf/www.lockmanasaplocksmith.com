@@ -284,7 +284,12 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
     <button type="button" class="btn btn-call" data-consent="yes">Accept</button>
   </div>
 </div>
+<button type="button" class="music-btn" aria-pressed="false" aria-label="Play the Lockman theme music">
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M9 3v11.6A3.5 3.5 0 1 0 11 18V8h7V3z"/></svg>
+  <span class="music-label">Theme</span>
+</button>
 <script src="/assets/main.js" defer></script>
+<script src="/assets/theme.js" defer></script>
 </body>
 </html>
 """
@@ -378,6 +383,12 @@ def home(cfg, articles):
   </div>
 </section>""" if articles else ""
     body = f"""<section class="hero halftone">
+  <div class="sky" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="clouds"></div>
+    <div class="beam b1"></div>
+    <div class="beam b2"></div>
+  </div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="burst">24/7 mobile locksmith</p>
@@ -393,8 +404,9 @@ def home(cfg, articles):
         <li>{e(clean(cfg['hours_text']))}</li>
       </ul>
     </div>
-    <div class="hero-art">
-      <img src="/assets/img/lockman-takes-a-break.webp" srcset="/assets/img/lockman-takes-a-break-560.webp 560w, /assets/img/lockman-takes-a-break.webp 1100w" sizes="(max-width: 960px) 90vw, 520px" alt="Comic art: Lockman, the locksmith superhero, relaxing with a coffee mug that says World's Best Locksmith, Golden Gate Bridge behind him" width="1100" height="1372" fetchpriority="high">
+    <div class="signal-stage" aria-hidden="true">
+      <div class="signal-beam"></div>
+      <img class="signal" src="/assets/img/signal.svg" alt="" width="300" height="200">
     </div>
   </div>
 </section>
@@ -402,6 +414,19 @@ def home(cfg, articles):
   <div class="wrap">
     <h2 class="comic">What we do</h2>
     <div class="grid-4">{services}</div>
+  </div>
+</section>
+<section class="section meet">
+  <div class="wrap two-col">
+    <div class="meet-art">
+      <img src="/assets/img/lockman-takes-a-break.webp" srcset="/assets/img/lockman-takes-a-break-560.webp 560w, /assets/img/lockman-takes-a-break.webp 1100w" sizes="(max-width: 960px) 92vw, 560px" alt="Comic art: Lockman, the locksmith superhero, relaxing with a coffee mug that says World's Best Locksmith, Golden Gate Bridge behind him" width="1100" height="1372" loading="lazy">
+    </div>
+    <div>
+      <h2 class="comic">Meet Lockman</h2>
+      <p>When the city sends up the signal, Lockman answers. Day or night, fog or rain, from the Mission to the Marina, he shows up with the right tools and gets you back in.</p>
+      <p>Behind the mask is a licensed San Francisco locksmith who treats every door, car and lock as a mission: fast, careful and honest about the price.</p>
+      <p><a class="btn btn-call" href="{tel(cfg)}">Send up the signal: {e(clean(cfg['phone_display']))}</a></p>
+    </div>
   </div>
 </section>
 <section class="section section-alt">
