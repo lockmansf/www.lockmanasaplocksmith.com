@@ -7,6 +7,12 @@ on:
     - cron: "17 * * * *"   # every hour: publish.py decides if it's today's hour
     - cron: "41 10 * * 1"  # Mondays: re-check published articles for copies online
   workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options: [publish, publish-now, check-keys]
+        default: publish
 
 permissions:
   contents: write
@@ -29,13 +35,21 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Publish today's article (if it's time)
-        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '17 * * * *'
+      - name: Check the Gemini and Copyscape keys
+        if: github.event_name == 'workflow_dispatch' && inputs.task == 'check-keys'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           COPYSCAPE_USER: ${{ secrets.COPYSCAPE_USER }}
           COPYSCAPE_KEY: ${{ secrets.COPYSCAPE_KEY }}
-        run: python3 -m publisher.publish
+        run: python3 -m publisher.check
+
+      - name: Publish today's article (if it's time)
+        if: (github.event_name == 'workflow_dispatch' && inputs.task != 'check-keys') || github.event.schedule == '17 * * * *'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COPYSCAPE_USER: ${{ secrets.COPYSCAPE_USER }}
+          COPYSCAPE_KEY: ${{ secrets.COPYSCAPE_KEY }}
+        run: python3 -m publisher.publish ${{ inputs.task == 'publish-now' && '--now' || '' }}
 
       - name: Weekly originality re-check
         if: github.event.schedule == '41 10 * * 1'
