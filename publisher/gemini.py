@@ -23,6 +23,7 @@ Rules:
 - Practical and genuinely useful for San Francisco residents and businesses. Mention San Francisco specifics only when they are true and relevant (fog and salt air corrode locks, Victorian doors, apartment buildings, street parking, and so on).
 - {min_words}-1100 words in total. Plain, friendly English. Short paragraphs.
 - Do NOT invent prices, statistics, laws, customer stories, reviews, awards or years of experience.
+- Do NOT promise or estimate arrival times, response times or costs.
 - Do NOT give step-by-step instructions for opening locks the reader does not own or for bypassing security.
 - Do NOT mention competitors.
 - The title must be under 65 characters. The description must be 140-155 characters.
