@@ -62,7 +62,7 @@
     "internal_similarity_limit": 0.12,
     "web_match_percent_limit": 5,
     "web_match_words_limit": 25,
-    "recheck_per_week": 15,
+    "recheck_per_week": 5,
     "ai_disclosure": "This article was written with AI assistance and checked for originality before publishing."
   }
 }
