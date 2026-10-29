@@ -43,6 +43,12 @@
           "reason": "GEMINI_API_KEY is not set"
         }
       ]
+    },
+    "2026-10-29": {
+      "target_hour": 18,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": []
