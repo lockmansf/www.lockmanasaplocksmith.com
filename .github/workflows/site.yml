@@ -41,7 +41,9 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           COPYSCAPE_USER: ${{ secrets.COPYSCAPE_USER }}
           COPYSCAPE_KEY: ${{ secrets.COPYSCAPE_KEY }}
-        run: python3 -m publisher.check
+        run: |
+          { date -u; python3 -m publisher.check; } > content/key_check.txt || true
+          cat content/key_check.txt
 
       - name: Publish today's article (if it's time)
         if: (github.event_name == 'workflow_dispatch' && inputs.task != 'check-keys') || github.event.schedule == '17 * * * *'
