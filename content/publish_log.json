@@ -46,8 +46,8 @@
     },
     "2026-10-29": {
       "target_hour": 18,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "locked-out-of-your-sf-apartment-what-to-do-right-away",
       "failures": [
         {
           "at": "2026-10-29T07:18",
@@ -64,5 +64,7 @@
       ]
     }
   },
-  "used_topics": []
+  "used_topics": [
+    "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco"
+  ]
 }
