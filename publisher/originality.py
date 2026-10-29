@@ -16,7 +16,7 @@ def check(text, own_domain, percent_limit, words_limit):
     if os.environ.get("LOCKMAN_MOCK"):
         from publisher import mock
         return mock.fake_check(text)
-    user, key = os.environ.get("COPYSCAPE_USER"), os.environ.get("COPYSCAPE_KEY")
+    user, key = (os.environ.get("COPYSCAPE_USER") or "").strip(), (os.environ.get("COPYSCAPE_KEY") or "").strip()
     if not user or not key:
         return False, "Copyscape credentials missing: refusing to publish without a web originality check"
     form = urllib.parse.urlencode({"u": user, "k": key, "o": "csearch", "e": "UTF-8", "c": "5", "t": text}).encode()

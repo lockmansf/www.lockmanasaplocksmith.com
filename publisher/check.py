@@ -7,6 +7,7 @@ check is free; it does not use a search credit.
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -18,15 +19,23 @@ MODELS = "https://generativelanguage.googleapis.com/v1beta/models"
 
 
 def check_gemini(model):
-    key = os.environ.get("GEMINI_API_KEY")
+    key = (os.environ.get("GEMINI_API_KEY") or "").strip()
     if not key:
         return False, "GEMINI_API_KEY secret is missing"
     body = {"contents": [{"role": "user", "parts": [{"text": "Reply with the single word OK."}]}]}
     req = urllib.request.Request(f"{MODELS}/{model}:generateContent", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json", "x-goog-api-key": key}, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            json.loads(r.read())
+        for wait in (20, 60, None):
+            try:
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    json.loads(r.read())
+                break
+            except urllib.error.HTTPError as ex:
+                if ex.code in (429, 500, 503) and wait:
+                    time.sleep(wait)
+                    continue
+                raise
         return True, f"Gemini key works with model {model}"
     except urllib.error.HTTPError as ex:
         detail = ex.read()[:300].decode(errors="replace")
@@ -49,7 +58,7 @@ def available_models(key):
 
 
 def check_copyscape():
-    user, key = os.environ.get("COPYSCAPE_USER"), os.environ.get("COPYSCAPE_KEY")
+    user, key = (os.environ.get("COPYSCAPE_USER") or "").strip(), (os.environ.get("COPYSCAPE_KEY") or "").strip()
     if not user or not key:
         return False, "COPYSCAPE_USER / COPYSCAPE_KEY secrets are missing"
     url = "https://www.copyscape.com/api/?" + urllib.parse.urlencode({"u": user, "k": key, "o": "balance"})
@@ -59,7 +68,8 @@ def check_copyscape():
     except (urllib.error.URLError, ET.ParseError) as ex:
         return False, f"Copyscape connection failed: {ex}"
     if root.findtext("error"):
-        return False, f"Copyscape error: {root.findtext('error')}"
+        return False, (f"Copyscape error: {root.findtext('error')} "
+                       f"(username is {len(user)} characters{', contains @' if '@' in user else ''}; key is {len(key)} characters)")
     return True, f"Copyscape works. Balance: ${root.findtext('value')} ({root.findtext('total')} searches left)"
 
 

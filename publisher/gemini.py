@@ -1,8 +1,11 @@
 """Writes an article with the Gemini API (REST, standard library only)."""
 import json
 import os
+import time
 import urllib.error
 import urllib.request
+
+RETRY_WAITS = [30, 90, 180]  # seconds between retries when Gemini is overloaded
 
 API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
@@ -49,7 +52,7 @@ def write_article(model, topic, existing_titles, min_words):
     if os.environ.get("LOCKMAN_MOCK"):
         from publisher import mock
         return mock.fake_article(topic)
-    key = os.environ.get("GEMINI_API_KEY")
+    key = (os.environ.get("GEMINI_API_KEY") or "").strip()
     if not key:
         raise GeminiError("GEMINI_API_KEY is not set")
     body = {
@@ -62,13 +65,19 @@ def write_article(model, topic, existing_titles, min_words):
         headers={"Content-Type": "application/json", "x-goog-api-key": key},
         method="POST",
     )
-    try:
-        with urllib.request.urlopen(req, timeout=180) as r:
-            data = json.loads(r.read())
-    except urllib.error.HTTPError as ex:
-        raise GeminiError(f"Gemini HTTP {ex.code}: {ex.read()[:400]!r}") from ex
-    except (urllib.error.URLError, TimeoutError) as ex:
-        raise GeminiError(f"Gemini connection failed: {ex}") from ex
+    data = None
+    for wait in RETRY_WAITS + [None]:
+        try:
+            with urllib.request.urlopen(req, timeout=180) as r:
+                data = json.loads(r.read())
+            break
+        except urllib.error.HTTPError as ex:
+            if ex.code in (429, 500, 503) and wait is not None:
+                time.sleep(wait)  # Google is temporarily overloaded; wait and try again
+                continue
+            raise GeminiError(f"Gemini HTTP {ex.code}: {ex.read()[:400]!r}") from ex
+        except (urllib.error.URLError, TimeoutError) as ex:
+            raise GeminiError(f"Gemini connection failed: {ex}") from ex
     try:
         text = "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"])
         return json.loads(text)
