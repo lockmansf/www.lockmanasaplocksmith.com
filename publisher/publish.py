@@ -57,6 +57,18 @@ def pick_topic(log):
 
 def generate_one(cfg, log, day_entry, dry_run=False, now=None):
     """One attempt. Returns the saved article dict, or None on failure (nothing published)."""
+    try:
+        return _generate_one(cfg, log, day_entry, dry_run, now)
+    except Exception as ex:  # never crash the hourly job; record why and publish nothing
+        import traceback
+        day_entry["failures"].append({"at": dt.datetime.now().isoformat(timespec="minutes"),
+                                      "reason": f"unexpected error: {type(ex).__name__}: {ex}",
+                                      "trace": traceback.format_exc()[-1500:]})
+        print(f"Attempt failed, nothing published: {type(ex).__name__}: {ex}")
+        return None
+
+
+def _generate_one(cfg, log, day_entry, dry_run=False, now=None):
     acfg = cfg["articles"]
     now = now or dt.datetime.now(ZoneInfo(acfg["timezone"]))
     existing = common.load_articles(status=None)
@@ -73,6 +85,10 @@ def generate_one(cfg, log, day_entry, dry_run=False, now=None):
     except gemini.GeminiError as ex:
         return fail(str(ex))
 
+    if isinstance(art, list) and art and isinstance(art[0], dict):
+        art = art[0]  # some model versions wrap the JSON object in a list
+    if not isinstance(art, dict):
+        return fail(f"article rejected: unexpected format ({type(art).__name__})")
     problem = validate(art, acfg["min_words"])
     if problem:
         return fail(f"article rejected: {problem}")
