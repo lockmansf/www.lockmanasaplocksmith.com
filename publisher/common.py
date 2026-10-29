@@ -36,6 +36,7 @@ def load_articles(status="published"):
 
 def save_article(article):
     data = {k: v for k, v in article.items() if not k.startswith("_")}
+    ARTICLES_DIR.mkdir(parents=True, exist_ok=True)
     path = ARTICLES_DIR / f"{article['slug']}.json"
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path

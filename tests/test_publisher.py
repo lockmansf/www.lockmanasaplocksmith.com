@@ -65,6 +65,13 @@ class TestSchedule(Sandbox):
         self.assertEqual(log["days"]["2026-10-27"]["attempts"], 1)
 
 
+class TestSaving(Sandbox):
+    def test_publishes_when_articles_folder_is_missing(self):
+        shutil.rmtree(common.ARTICLES_DIR)  # git does not keep empty folders
+        publish.run(force_now=True, now=dt.datetime(2026, 10, 27, 12, tzinfo=TZ))
+        self.assertEqual(len(self.published()), 1)
+
+
 class TestFailuresPublishNothing(Sandbox):
     def run_failing(self, mode):
         with mock.patch.dict(os.environ, {"LOCKMAN_MOCK": mode}):
