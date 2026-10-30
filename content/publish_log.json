@@ -65,12 +65,13 @@
     },
     "2026-10-30": {
       "target_hour": 9,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "why-keys-break-inside-locks-and-how-to-prevent-it",
       "failures": []
     }
   },
   "used_topics": [
-    "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco"
+    "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
+    "Why keys break inside locks and how to prevent it"
   ]
 }
