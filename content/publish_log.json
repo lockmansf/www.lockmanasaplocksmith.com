@@ -71,13 +71,14 @@
     },
     "2026-10-31": {
       "target_hour": 16,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "how-san-francisco-salt-air-and-fog-damage-your-locks",
       "failures": []
     }
   },
   "used_topics": [
     "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
-    "Why keys break inside locks and how to prevent it"
+    "Why keys break inside locks and how to prevent it",
+    "How San Francisco fog and salt air wear out door locks"
   ]
 }
