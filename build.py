@@ -722,6 +722,35 @@ def rss(cfg, articles):
 """
 
 
+# ---------------------------------------------------------------- old site
+
+# Addresses from the previous website, forwarded so old Google results and links still land somewhere useful.
+OLD_SITE_REDIRECTS = {
+    "/about-us/": "/about/",
+    "/about-us.html": "/about/",
+    "/contact-us/": "/contact/",
+    "/contact-us.html": "/contact/",
+    "/contact.html": "/contact/",
+    "/shop/": "/services/",
+    "/shop.html": "/services/",
+    "/home/": "/",
+    "/index.php": "/",
+}
+
+
+def redirect_page(cfg, target):
+    url = cfg["site_url"] + target
+    return f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="{url}">
+<meta http-equiv="refresh" content="0; url={target}">
+</head><body><p>This page moved to <a href="{target}">{url}</a>.</p>
+<script>location.replace({json.dumps(target)})</script></body></html>
+"""
+
+
 # ---------------------------------------------------------------- main
 
 def write(rel, content):
@@ -769,6 +798,8 @@ def build():
     write("/404.html", not_found(cfg))
     write("/sitemap.xml", sitemap(cfg, urls))
     write("/robots.txt", robots(cfg))
+    for old_path, new_path in OLD_SITE_REDIRECTS.items():
+        write(old_path, redirect_page(cfg, new_path))
     for name in cfg.get("google_verification_files", []):  # Search Console ownership files
         (DIST / name).write_text(f"google-site-verification: {name}", encoding="utf-8")
     write("/articles/feed.xml", rss(cfg, articles))
