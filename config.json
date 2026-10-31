@@ -63,5 +63,8 @@
     "web_match_words_limit": 25,
     "recheck_per_week": 5,
     "ai_disclosure": "This article was written with AI assistance and checked for originality before publishing."
-  }
+  },
+  "google_verification_files": [
+    "google7f6ad3f7cf709a82.html"
+  ]
 }

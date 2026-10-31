@@ -769,6 +769,8 @@ def build():
     write("/404.html", not_found(cfg))
     write("/sitemap.xml", sitemap(cfg, urls))
     write("/robots.txt", robots(cfg))
+    for name in cfg.get("google_verification_files", []):  # Search Console ownership files
+        (DIST / name).write_text(f"google-site-verification: {name}", encoding="utf-8")
     write("/articles/feed.xml", rss(cfg, articles))
     domain = cfg["site_url"].split("://", 1)[1].strip("/")
     write("/CNAME", domain + "\n")
