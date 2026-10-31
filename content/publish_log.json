@@ -68,6 +68,12 @@
       "attempts": 1,
       "published": "why-keys-break-inside-locks-and-how-to-prevent-it",
       "failures": []
+    },
+    "2026-10-31": {
+      "target_hour": 16,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
