@@ -136,6 +136,32 @@ def tel(cfg):
     return "tel:" + "".join(ch for ch in clean(cfg["phone_e164"]) if ch.isdigit() or ch == "+")
 
 
+SOCIAL = {
+    # name: (label, svg path in a 24x24 box)
+    "facebook": ("Facebook", "M14 8h3V4h-3c-2.8 0-4 1.7-4 4.3V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.7-.6z"),
+    "instagram": ("Instagram", "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.3 5.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"),
+    "youtube": ("YouTube", "M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12 31 31 0 0 0 2 15.8a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1c.3-1.2.4-2.5.4-3.8s-.1-2.6-.4-3.8zM10 15V9l5.2 3z"),
+    "thumbtack": ("Thumbtack", "M9 2h6v2l-1 1v5l3 3v2h-4v7l-1 1-1-1v-7H7v-2l3-3V5L9 4z"),
+    "yelp": ("Yelp", "M12.2 2.3c-.6-.3-4.4.8-5 1.5-.3.3-.3.6-.2.9l3.9 6.7c.4.7 1.6.4 1.6-.4V2.9c0-.3-.1-.5-.3-.6zM11 14.3l-4.7 1.3c-.7.2-.8 1.2-.2 1.6l3.6 2.6c.6.4 1.4 0 1.4-.7v-4.1c0-.5-.5-.8-1.1-.7zm2.4-.6 2.9 3.9c.4.6 1.3.4 1.5-.3l.9-4.1c.1-.6-.5-1.1-1.1-.9l-3.8.2c-.6 0-.8.7-.4 1.2zm.2-3.6 2.4 4.1c.3.6 1.2.6 1.5 0l1.8-3.7c.3-.6-.2-1.2-.8-1.1l-4.2.8c-.6.1-.9.6-.7 1.1z"),
+}
+
+
+def social_links(cfg):
+    return [(key, SOCIAL[key][0], url) for key, url in cfg.get("social", {}).items() if url and key in SOCIAL]
+
+
+def social_html(cfg):
+    links = social_links(cfg)
+    if not links:
+        return ""
+    items = "".join(
+        f'<a class="social-link" href="{e(url)}" rel="noopener" aria-label="Lockman on {label}">'
+        f'<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="{SOCIAL[key][1]}"/></svg></a>'
+        for key, label, url in links)
+    return f'<p class="footer-head">Follow Lockman</p><div class="social-row">{items}</div>'
+
+
+
 def business_schema(cfg):
     data = {
         "@context": "https://schema.org",
@@ -154,6 +180,8 @@ def business_schema(cfg):
             "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": s["name"], "url": f"{cfg['site_url']}/services/{s['slug']}/"}} for s in SERVICES],
         },
     }
+    if social_links(cfg):
+        data["sameAs"] = [url for _, _, url in social_links(cfg)]
     if cfg.get("opening_hours_schema"):
         data["openingHoursSpecification"] = cfg["opening_hours_schema"]
     return data
@@ -259,6 +287,7 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
       <p><a href="{tel(cfg)}">{phone}</a></p>
       <p><a href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a></p>
       <p>{e(clean(cfg['hours_text']))}</p>
+      {social_html(cfg)}
     </div>
     <div>
       <p class="footer-head">Services</p>
