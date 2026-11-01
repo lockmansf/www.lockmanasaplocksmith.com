@@ -142,6 +142,7 @@ SOCIAL = {
     "instagram": ("Instagram", "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.3 5.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"),
     "youtube": ("YouTube", "M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12 31 31 0 0 0 2 15.8a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1c.3-1.2.4-2.5.4-3.8s-.1-2.6-.4-3.8zM10 15V9l5.2 3z"),
     "thumbtack": ("Thumbtack", "M9 2h6v2l-1 1v5l3 3v2h-4v7l-1 1-1-1v-7H7v-2l3-3V5L9 4z"),
+    "nimbus": ("Nimbus (book online)", "M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2zm-2 8v10h14V10zm2 2h4v4H7z"),
     "yelp": ("Yelp", "M12.2 2.3c-.6-.3-4.4.8-5 1.5-.3.3-.3.6-.2.9l3.9 6.7c.4.7 1.6.4 1.6-.4V2.9c0-.3-.1-.5-.3-.6zM11 14.3l-4.7 1.3c-.7.2-.8 1.2-.2 1.6l3.6 2.6c.6.4 1.4 0 1.4-.7v-4.1c0-.5-.5-.8-1.1-.7zm2.4-.6 2.9 3.9c.4.6 1.3.4 1.5-.3l.9-4.1c.1-.6-.5-1.1-1.1-.9l-3.8.2c-.6 0-.8.7-.4 1.2zm.2-3.6 2.4 4.1c.3.6 1.2.6 1.5 0l1.8-3.7c.3-.6-.2-1.2-.8-1.1l-4.2.8c-.6.1-.9.6-.7 1.1z"),
 }
 
@@ -570,12 +571,20 @@ def about(cfg):
                 body=body, crumbs=[("/", "Home"), ("/about/", "About")])
 
 
+def booking_card(cfg):
+    url = cfg.get("social", {}).get("nimbus")
+    if not url:
+        return ""
+    return f"""<div class="card"><h2>Book online</h2><p><a class="btn btn-ghost" href="{e(url)}" rel="noopener">Book on Nimbus</a></p><p>Schedule non-emergency work like lock repair or smart lock installation.</p></div>"""
+
+
 def contact(cfg):
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Contact Lockman ASAP Locksmith</h1>
 <p class="lead">The fastest way to reach us is a phone call or WhatsApp message.</p></div></section>
-<section class="section"><div class="wrap grid-3">
+<section class="section"><div class="wrap grid-4">
 <div class="card"><h2>Phone</h2><p><a class="btn btn-call" href="{tel(cfg)}">{e(clean(cfg['phone_display']))}</a></p></div>
 <div class="card"><h2>WhatsApp</h2><p><a class="btn btn-wa" href="{whatsapp_url(cfg)}" rel="noopener">Message us</a></p><p>Send a photo of the lock and we'll tell you what we need.</p></div>
+{booking_card(cfg)}
 <div class="card"><h2>Hours &amp; email</h2><p>{e(clean(cfg['hours_text']))}</p><p><a href="mailto:{e(clean(cfg['email']))}">{e(clean(cfg['email']))}</a></p></div>
 </div></section>"""
     return page(cfg, path="/contact/", title="Contact Us", description=f"Call {clean(cfg['phone_display'])} or WhatsApp Lockman ASAP Locksmith in San Francisco.",
