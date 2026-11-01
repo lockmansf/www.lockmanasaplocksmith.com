@@ -74,6 +74,12 @@
       "attempts": 1,
       "published": "how-san-francisco-salt-air-and-fog-damage-your-locks",
       "failures": []
+    },
+    "2026-11-01": {
+      "target_hour": 18,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
