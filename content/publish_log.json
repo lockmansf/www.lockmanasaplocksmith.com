@@ -83,8 +83,8 @@
     },
     "2026-11-02": {
       "target_hour": 13,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "why-using-a-coat-hanger-damages-modern-car-doors",
       "failures": []
     }
   },
@@ -92,6 +92,7 @@
     "What to do in the first 10 minutes after you're locked out of your apartment in San Francisco",
     "Why keys break inside locks and how to prevent it",
     "How San Francisco fog and salt air wear out door locks",
-    "Locked your keys in the car in San Francisco: what to do while you wait"
+    "Locked your keys in the car in San Francisco: what to do while you wait",
+    "Why you shouldn't try a coat hanger on a modern car door"
   ]
 }
