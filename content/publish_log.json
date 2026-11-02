@@ -80,6 +80,12 @@
       "attempts": 1,
       "published": "locked-keys-in-car-in-sf-what-to-do-while-waiting",
       "failures": []
+    },
+    "2026-11-02": {
+      "target_hour": 13,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
