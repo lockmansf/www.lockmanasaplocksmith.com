@@ -73,9 +73,22 @@ def check_copyscape():
     return True, f"Copyscape works. Balance: ${root.findtext('value')} ({root.findtext('total')} searches left)"
 
 
+def check_meta(version):
+    token = (os.environ.get("META_PAGE_TOKEN") or "").strip()
+    if not token:
+        return False, "META_PAGE_TOKEN secret is missing (social posting off)"
+    from publisher import social
+    try:
+        page_id, name, ig = social.accounts(version, token)
+    except social.MetaError as ex:
+        return False, f"Facebook token error: {ex}"
+    return True, f"Facebook Page '{name}' connected" + ("; Instagram linked" if ig else "; Instagram NOT linked")
+
+
 def main():
     cfg = common.load_config()
-    results = [check_gemini(cfg["articles"]["gemini_model"]), check_copyscape()]
+    results = [check_gemini(cfg["articles"]["gemini_model"]), check_copyscape(),
+               check_meta(cfg["social_posting"]["graph_version"])]
     for ok, msg in results:
         print(("OK:   " if ok else "FAIL: ") + msg)
     return 0 if all(ok for ok, _ in results) else 1

@@ -11,7 +11,7 @@ on:
       task:
         description: "What to run"
         type: choice
-        options: [publish, publish-now, check-keys]
+        options: [publish, publish-now, check-keys, social-now]
         default: publish
 
 permissions:
@@ -41,17 +41,25 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           COPYSCAPE_USER: ${{ secrets.COPYSCAPE_USER }}
           COPYSCAPE_KEY: ${{ secrets.COPYSCAPE_KEY }}
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
         run: |
           { date -u; python3 -m publisher.check; } > content/key_check.txt || true
           cat content/key_check.txt
 
       - name: Publish today's article (if it's time)
-        if: (github.event_name == 'workflow_dispatch' && inputs.task != 'check-keys') || github.event.schedule == '17 * * * *'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.task == 'publish' || inputs.task == 'publish-now')) || github.event.schedule == '17 * * * *'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           COPYSCAPE_USER: ${{ secrets.COPYSCAPE_USER }}
           COPYSCAPE_KEY: ${{ secrets.COPYSCAPE_KEY }}
         run: python3 -m publisher.publish ${{ inputs.task == 'publish-now' && '--now' || '' }}
+
+      - name: Weekly Facebook and Instagram post (if it's time)
+        if: (github.event_name == 'workflow_dispatch' && inputs.task == 'social-now') || github.event.schedule == '17 * * * *'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+        run: python3 -m publisher.social ${{ inputs.task == 'social-now' && '--now' || '' }}
 
       - name: Weekly originality re-check
         if: github.event.schedule == '41 10 * * 1'

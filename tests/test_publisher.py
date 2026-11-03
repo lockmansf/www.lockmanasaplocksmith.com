@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest import mock
 from zoneinfo import ZoneInfo
 
-from publisher import common, originality, publish, recheck
+from publisher import common, originality, publish, recheck, social
 
 TZ = ZoneInfo("America/Los_Angeles")
 
@@ -147,6 +147,37 @@ class TestRecheck(Sandbox):
         self.assertNotIn(first, slugs)
         self.assertEqual(len(slugs), 1)  # replacement written
         self.assertTrue((common.REMOVED_DIR / f"{first}.json").exists())
+
+
+class TestSocial(Sandbox):
+    def setUp(self):
+        super().setUp()
+        self.p = mock.patch.object(social, "LOG_FILE", self.tmp / "content" / "social_log.json")
+        self.p.start()
+        publish.run(force_now=True, now=dt.datetime(2026, 11, 2, 12, tzinfo=TZ))
+
+    def tearDown(self):
+        self.p.stop()
+        super().tearDown()
+
+    def test_posts_to_both_then_waits_a_week(self):
+        social.run(now=dt.datetime(2026, 11, 3, 12, tzinfo=TZ))
+        log = social.load_log()
+        self.assertEqual(log["posts"][0]["facebook"], "111_fbpost")
+        self.assertEqual(log["posts"][0]["instagram"], "igpost1")
+        social.run(now=dt.datetime(2026, 11, 6, 12, tzinfo=TZ))  # 3 days later: too soon
+        self.assertEqual(len(social.load_log()["posts"]), 1)
+
+    def test_outside_window_does_nothing(self):
+        social.run(now=dt.datetime(2026, 11, 3, 6, tzinfo=TZ))
+        self.assertEqual(social.load_log()["posts"], [])
+
+    def test_meta_failure_is_recorded_not_crashing(self):
+        with mock.patch.dict(os.environ, {"LOCKMAN_MOCK": "fail-meta"}):
+            social.run(now=dt.datetime(2026, 11, 3, 12, tzinfo=TZ))
+        log = social.load_log()
+        self.assertEqual(log["posts"], [])
+        self.assertEqual(len(log["failures"]), 1)
 
 
 class TestBuild(unittest.TestCase):

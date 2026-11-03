@@ -74,5 +74,16 @@
     "thumbtack": "https://www.thumbtack.com/ca/san-francisco/locksmiths/lockman-asap-locksmith/service/526809677209993229",
     "yelp": "https://yelp.to/DQR_XGaSFS",
     "nimbus": "https://hirenimbus.com/pro/lockman-asap-locksmith"
+  },
+  "social_posting": {
+    "every_days": 7,
+    "window_start_hour": 10,
+    "window_end_hour": 19,
+    "graph_version": "v23.0",
+    "images": [
+      "lockman-break.jpg",
+      "brand-card.jpg",
+      "smart-gate.jpg"
+    ]
   }
 }

@@ -24,3 +24,18 @@ def fake_check(text):
     if os.environ.get("LOCKMAN_MOCK") == "fail-copyscape":
         return False, "Similar text found online: https://example.com/copied (80 words, 12%)"
     return True, "No matching text found online (mock)"
+
+
+def fake_graph(method, path, params):
+    if os.environ.get("LOCKMAN_MOCK") == "fail-meta":
+        from publisher.social import MetaError
+        raise MetaError("mock Meta failure")
+    if path == "me":
+        return {"id": "111", "name": "Lockman", "instagram_business_account": {"id": "222"}}
+    if path.endswith("/feed"):
+        return {"id": "111_fbpost"}
+    if path.endswith("/media"):
+        return {"id": "container1"}
+    if path.endswith("/media_publish"):
+        return {"id": "igpost1"}
+    return {"status_code": "FINISHED"}
