@@ -9,6 +9,29 @@ REMOVED_DIR = ROOT / "content" / "removed"
 LOG_FILE = ROOT / "content" / "publish_log.json"
 TOPICS_FILE = ROOT / "content" / "topics.json"
 
+# Article folders (categories). Each article belongs to exactly one.
+CATEGORIES = [
+    {"slug": "doors-home-locks", "name": "Doors & Home Locks",
+     "about": "Front doors, deadbolts, apartment and home locks, lockouts at home."},
+    {"slug": "cars-car-keys", "name": "Cars & Car Keys",
+     "about": "Car lockouts, car keys, key fobs, broken keys in car doors or ignitions."},
+    {"slug": "locksmith-know-how", "name": "Locksmith Know-How",
+     "about": "Rekeying, lock repair, choosing a licensed locksmith, avoiding scams, business locks."},
+    {"slug": "tips-advice", "name": "Tips & Advice",
+     "about": "Everyday lock and key care, home security habits, prevention tips."},
+]
+CATEGORY_SLUGS = [x["slug"] for x in CATEGORIES]
+DEFAULT_CATEGORY = "tips-advice"
+
+
+def category_of(article):
+    cat = article.get("category")
+    return cat if cat in CATEGORY_SLUGS else DEFAULT_CATEGORY
+
+
+def category_by_slug(slug):
+    return next(x for x in CATEGORIES if x["slug"] == slug)
+
 
 def load_config():
     return json.loads((ROOT / "config.json").read_text(encoding="utf-8"))

@@ -112,6 +112,7 @@ def _generate_one(cfg, log, day_entry, dry_run=False, now=None):
 
     article = {
         "slug": slug,
+        "category": art.get("category") if art.get("category") in common.CATEGORY_SLUGS else common.DEFAULT_CATEGORY,
         "title": art["title"].strip(),
         "description": art["description"].strip(),
         "intro": art["intro"].strip(),

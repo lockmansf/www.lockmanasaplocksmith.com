@@ -11,6 +11,7 @@ API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateC
 
 PROMPT = """You write articles for the website of Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco, California.
 Services: home, business and car lockouts, broken key extraction, lock repair.
+True fact you may mention naturally (at most once): the business is backed by 30 years of family locksmith experience; the owner learned the trade from his father, who worked as a locksmith.
 
 Write ONE new, completely original article.
 {topic_line}
@@ -22,14 +23,18 @@ Rules:
 - Write in your own words from scratch. Never copy, adapt or paraphrase text from any website, book or article.
 - Practical and genuinely useful for San Francisco residents and businesses. Mention San Francisco specifics only when they are true and relevant (fog and salt air corrode locks, Victorian doors, apartment buildings, street parking, and so on).
 - {min_words}-1100 words in total. Plain, friendly English. Short paragraphs.
-- Do NOT invent prices, statistics, laws, customer stories, reviews, awards or years of experience.
+- Do NOT invent prices, statistics, laws, customer stories, reviews or awards. The only experience claim allowed is the 30 years of family experience above.
 - Do NOT promise or estimate arrival times, response times or costs.
 - Do NOT give step-by-step instructions for opening locks the reader does not own or for bypassing security.
 - Do NOT mention competitors.
 - The title must be under 65 characters. The description must be 140-155 characters.
 
+Put the article in exactly ONE of these categories (use the slug):
+{categories}
+
 Return ONLY JSON in exactly this shape:
 {{
+  "category": "one of the category slugs above",
   "title": "...",
   "description": "...",
   "intro": "one paragraph",
@@ -46,7 +51,9 @@ class GeminiError(Exception):
 def build_prompt(topic, existing_titles, min_words):
     topic_line = f"Topic: {topic}" if topic else "Choose a fresh, useful topic that is not covered by the existing titles."
     existing = "\n".join(f"- {t}" for t in existing_titles) or "- (none yet)"
-    return PROMPT.format(topic_line=topic_line, existing=existing, min_words=min_words)
+    from publisher.common import CATEGORIES
+    categories = "\n".join(f"- {c['slug']}: {c['about']}" for c in CATEGORIES)
+    return PROMPT.format(topic_line=topic_line, existing=existing, min_words=min_words, categories=categories)
 
 
 def write_article(model, topic, existing_titles, min_words):

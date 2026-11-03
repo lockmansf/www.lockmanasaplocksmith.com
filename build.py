@@ -14,6 +14,10 @@ from pathlib import Path
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+from publisher.common import CATEGORIES, category_of, category_by_slug  # noqa: E402
+
+EXPERIENCE = "30 years of family locksmith experience: the owner learned the trade from his father, a locksmith."
 DIST = ROOT / "dist"
 ARTICLES_DIR = ROOT / "content" / "articles"
 
@@ -340,7 +344,9 @@ def cta_block(cfg, heading="Locked out? Key broken? Lock stuck?"):
 
 def article_card(a):
     d = dt.datetime.fromisoformat(a["published_at"]).date()
+    cat = category_by_slug(category_of(a))
     return f"""<article class="card">
+  <p class="card-cat"><a href="/articles/category/{cat['slug']}/">{e(cat['name'])}</a></p>
   <p class="card-date"><time datetime="{d.isoformat()}">{d.strftime('%B %-d, %Y')}</time></p>
   <h3><a href="/articles/{a['slug']}/">{e(a['title'])}</a></h3>
   <p>{e(a['description'])}</p>
@@ -556,9 +562,11 @@ def about(cfg):
 <div>
 <h2 class="comic">Who we are</h2>
 <p>Lockman ASAP Locksmith is owned and run by Yaniv, a licensed California locksmith. Every job is handled by a licensed locksmith, not a call center.</p>
+<p>Lockman is backed by 30 years of family locksmith experience. Yaniv learned the trade from his father, a locksmith, and brings that hands-on knowledge to every door, lock and car key.</p>
 <p>The comic art on this site is original artwork created for Lockman. The hero stands for what we want every customer to feel when we arrive: help is here.</p>
 <h2 class="comic">Our promise</h2>
 <ul class="points">
+<li><h3>30 years of family experience</h3><p>A trade passed down from father to son.</p></li>
 <li><h3>Licensed</h3><p>California Locksmith License {e(clean(cfg['license_number']))}.</p></li>
 <li><h3>Honest pricing</h3><p>The price is confirmed before work begins.</p></li>
 <li><h3>Careful work</h3><p>Non-destructive methods first, always.</p></li>
@@ -591,10 +599,30 @@ def contact(cfg):
                 body=body, crumbs=[("/", "Home"), ("/contact/", "Contact")])
 
 
+def category_nav(active=None):
+    links = [f'<a class="btn {"btn-call" if active is None else "btn-ghost"}" href="/articles/">All</a>']
+    for c in CATEGORIES:
+        cls = "btn-call" if c["slug"] == active else "btn-ghost"
+        links.append(f'<a class="btn {cls}" href="/articles/category/{c["slug"]}/">{e(c["name"])}</a>')
+    return f'<nav class="btn-row category-nav" aria-label="Article categories">{"".join(links)}</nav>'
+
+
+def category_page(cfg, cat, articles):
+    items = [a for a in articles if category_of(a) == cat["slug"]]
+    cards = "".join(article_card(a) for a in items) or "<p>New articles in this category are on the way.</p>"
+    path = f"/articles/category/{cat['slug']}/"
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">{e(cat['name'])}</h1>
+<p class="lead">{e(cat['about'])}</p>{category_nav(cat['slug'])}</div></section>
+<section class="section"><div class="wrap grid-3">{cards}</div></section>"""
+    return page(cfg, path=path, title=f"{cat['name']} | Locksmith Articles",
+                description=f"San Francisco locksmith articles: {cat['about']}"[:155],
+                body=body, crumbs=[("/", "Home"), ("/articles/", "Articles"), (path, cat["name"])])
+
+
 def articles_index(cfg, articles):
     cards = "".join(article_card(a) for a in articles) or "<p>New articles are on the way.</p>"
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith Tips &amp; Articles</h1>
-<p class="lead">Practical advice on locks, keys and home security in San Francisco.</p></div></section>
+<p class="lead">Practical advice on locks, keys and home security in San Francisco.</p>{category_nav()}</div></section>
 <section class="section"><div class="wrap grid-3">{cards}</div></section>"""
     return page(cfg, path="/articles/", title="Locksmith Tips & Articles", description="Original locksmith advice for San Francisco homes and businesses.",
                 body=body, crumbs=[("/", "Home"), ("/articles/", "Articles")])
@@ -624,24 +652,28 @@ def article_page(cfg, a, articles):
         }
     schema = {
         "@context": "https://schema.org", "@type": "BlogPosting",
-        "headline": a["title"], "description": a["description"],
+        "headline": a["title"], "description": a["description"], "articleSection": category_by_slug(category_of(a))["name"],
         "datePublished": published.isoformat(), "dateModified": published.isoformat(),
         "mainEntityOfPage": url,
         "author": {"@type": "Organization", "name": cfg["business_name"], "url": cfg["site_url"] + "/"},
         "publisher": {"@id": cfg["site_url"] + "/#business"},
         "image": cfg["site_url"] + "/assets/img/og-image.png",
     }
-    related = [x for x in articles if x["slug"] != a["slug"]][:3]
+    cat = category_by_slug(category_of(a))
+    others = [x for x in articles if x["slug"] != a["slug"]]
+    related = ([x for x in others if category_of(x) == cat["slug"]] + [x for x in others if category_of(x) != cat["slug"]])[:3]
     related_html = f"""<section class="section section-alt"><div class="wrap"><h2 class="comic">More articles</h2>
 <div class="grid-3">{''.join(article_card(r) for r in related)}</div></div></section>""" if related else ""
     disclosure = cfg["articles"].get("ai_disclosure")
     body = f"""<article class="section">
 <div class="wrap prose">
+<p class="card-cat"><a href="/articles/category/{cat['slug']}/">{e(cat['name'])}</a></p>
 <p class="card-date"><time datetime="{published.date().isoformat()}">{published.strftime('%B %-d, %Y')}</time></p>
 <h1 class="comic">{e(a['title'])}</h1>
 <p class="lead">{e(a['intro'])}</p>
 {render_sections(a['sections'])}
 {faq_html}
+<aside class="panel author-box"><p><strong>From Lockman ASAP Locksmith</strong>: {e(EXPERIENCE)}</p></aside>
 <aside class="panel article-cta"><p><strong>Need a locksmith in San Francisco now?</strong></p>
 <div class="btn-row"><a class="btn btn-call" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
 <a class="btn btn-wa" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a></div></aside>
@@ -651,7 +683,7 @@ def article_page(cfg, a, articles):
 {related_html}"""
     return page(cfg, path=f"/articles/{a['slug']}/", title=a["title"], description=a["description"], body=body, og_type="article",
                 schemas=[s for s in (schema, faq_schema) if s],
-                crumbs=[("/", "Home"), ("/articles/", "Articles"), (f"/articles/{a['slug']}/", a["title"])])
+                crumbs=[("/", "Home"), ("/articles/", "Articles"), (f"/articles/category/{cat['slug']}/", cat["name"]), (f"/articles/{a['slug']}/", a["title"])])
 
 
 def legal_page(cfg, path, title, description, inner):
@@ -828,6 +860,9 @@ def build():
     add("/about/", about(cfg))
     add("/contact/", contact(cfg))
     add("/articles/", articles_index(cfg, articles), newest)
+    for c in CATEGORIES:
+        items = [a for a in articles if category_of(a) == c["slug"]]
+        add(f"/articles/category/{c['slug']}/", category_page(cfg, c, articles), items[0]["published_at"][:10] if items else newest)
     for a in articles:
         add(f"/articles/{a['slug']}/", article_page(cfg, a, articles), a["published_at"][:10])
     add("/privacy/", privacy(cfg))
