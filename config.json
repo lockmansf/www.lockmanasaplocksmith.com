@@ -79,7 +79,7 @@
     "every_days": 7,
     "window_start_hour": 10,
     "window_end_hour": 19,
-    "graph_version": "v23.0",
+    "graph_version": "v26.0",
     "images": [
       "lockman-break.jpg",
       "brand-card.jpg",
