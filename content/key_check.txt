@@ -1,3 +1,4 @@
-Thu Oct 29 07:12:47 UTC 2026
+Tue Nov  3 19:40:12 UTC 2026
 OK:   Gemini key works with model gemini-3.6-flash
-OK:   Copyscape works. Balance: $10 (200 searches left)
+OK:   Copyscape works. Balance: $8.65 (173 searches left)
+FAIL: META_PAGE_TOKEN secret is missing (social posting off)
