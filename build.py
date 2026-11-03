@@ -126,6 +126,7 @@ def nav_links():
         ("/missions/", "Missions"),
         ("/service-area/", "Service Area"),
         ("/articles/", "Articles"),
+        ("/videos/", "Videos"),
         ("/about/", "About"),
         ("/contact/", "Contact"),
     ]
@@ -686,6 +687,36 @@ def article_page(cfg, a, articles):
                 crumbs=[("/", "Home"), ("/articles/", "Articles"), (f"/articles/category/{cat['slug']}/", cat["name"]), (f"/articles/{a['slug']}/", a["title"])])
 
 
+VIDEOS_FILE = ROOT / "content" / "videos.json"
+
+
+def load_videos():
+    if not VIDEOS_FILE.exists():
+        return []
+    items = json.loads(VIDEOS_FILE.read_text(encoding="utf-8"))
+    items = [v for v in items if (ROOT / "assets" / "videos" / f"{v['slug']}.mp4").exists()]
+    return sorted(items, key=lambda v: v["published_at"], reverse=True)
+
+
+def videos_page(cfg, videos):
+    cards, schemas = [], []
+    for v in videos:
+        src = f"/assets/videos/{v['slug']}.mp4"
+        poster = f"/assets/videos/{v['slug']}.jpg"
+        cards.append(f"""<article class="card video-card" id="{v['slug']}">
+<video controls playsinline preload="none" poster="{poster}" width="540" height="960"><source src="{src}" type="video/mp4"></video>
+<h2>{e(v['title'])}</h2><p>{e(v.get('description', ''))}</p></article>""")
+        schemas.append({"@context": "https://schema.org", "@type": "VideoObject", "name": v["title"],
+                        "description": v.get("description") or v["title"], "uploadDate": v["published_at"],
+                        "thumbnailUrl": cfg["site_url"] + poster, "contentUrl": cfg["site_url"] + src})
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Lockman Videos</h1>
+<p class="lead">Lockman in action across San Francisco: car, home and business lockouts.</p></div></section>
+<section class="section"><div class="wrap grid-3 video-grid">{''.join(cards) or '<p>New videos are on the way.</p>'}</div></section>
+{cta_block(cfg)}"""
+    return page(cfg, path="/videos/", title="Lockman Videos", description="Watch Lockman ASAP Locksmith in action across San Francisco: car, home and business lockouts.",
+                body=body, schemas=schemas, crumbs=[("/", "Home"), ("/videos/", "Videos")])
+
+
 def legal_page(cfg, path, title, description, inner):
     body = f"""<section class="section"><div class="wrap prose"><h1 class="comic">{e(title)}</h1>
 <p class="card-date">Last updated: {LEGAL_UPDATED}</p>{inner}</div></section>"""
@@ -865,6 +896,8 @@ def build():
         add(f"/articles/category/{c['slug']}/", category_page(cfg, c, articles), items[0]["published_at"][:10] if items else newest)
     for a in articles:
         add(f"/articles/{a['slug']}/", article_page(cfg, a, articles), a["published_at"][:10])
+    videos = load_videos()
+    add("/videos/", videos_page(cfg, videos), videos[0]["published_at"][:10] if videos else newest)
     add("/privacy/", privacy(cfg))
     add("/terms/", terms(cfg))
     add("/accessibility/", accessibility(cfg))
