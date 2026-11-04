@@ -1,0 +1,52 @@
+name: Post videos (Buffer)
+
+on:
+  workflow_run:
+    workflows: ["Publish and deploy"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options: [check, post]
+        default: check
+
+permissions:
+  contents: write
+
+concurrency:
+  group: buffer
+  cancel-in-progress: false
+
+jobs:
+  buffer:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check the Buffer key (lists channels, posts nothing)
+        if: github.event_name == 'workflow_dispatch' && inputs.task == 'check'
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: python3 -m publisher.buffer --check
+
+      - name: Post new videos to Instagram, TikTok and YouTube
+        if: github.event_name == 'workflow_run' || inputs.task == 'post'
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: |
+          python3 -m publisher.buffer
+          git config user.name "lockman-bot"
+          git config user.email "lockman-bot@users.noreply.github.com"
+          git add content/videos.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Videos: Buffer post results"
+            git pull --rebase && git push
+          fi
