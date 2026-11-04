@@ -92,6 +92,12 @@
       "attempts": 1,
       "published": "broken-car-key-in-door-or-ignition-here-is-what-to-do",
       "failures": []
+    },
+    "2026-11-04": {
+      "target_hour": 18,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
