@@ -38,7 +38,8 @@ def gql(query, variables=None):
         raise BufferError("BUFFER_API_KEY secret is missing")
     body = json.dumps({"query": query, "variables": variables or {}}).encode()
     req = urllib.request.Request(API, data=body, method="POST", headers={
-        "Content-Type": "application/json", "Authorization": f"Bearer {key}"})
+        "Content-Type": "application/json", "Accept": "application/json",
+        "User-Agent": "lockman-site/1.0", "Authorization": f"Bearer {key}"})
     try:
         with urllib.request.urlopen(req, timeout=90) as r:
             data = json.loads(r.read())
@@ -49,6 +50,24 @@ def gql(query, variables=None):
     if data.get("errors"):
         raise BufferError("; ".join(e.get("message", "?") for e in data["errors"]))
     return data["data"]
+
+
+def diagnose():
+    """Prints what is wrong with the key, without printing the key."""
+    key = (os.environ.get("BUFFER_API_KEY") or "")
+    print(f"key length {len(key.strip())}, has spaces/newlines inside: {any(c.isspace() for c in key.strip())}, "
+          f"starts with 'Bearer': {key.strip().lower().startswith('bearer')}, dots: {key.count('.')}")
+    for name, hdr in (("Bearer", f"Bearer {key.strip()}"), ("raw", key.strip())):
+        req = urllib.request.Request(API, data=json.dumps({"query": "query { account { id } }"}).encode(),
+                                     method="POST", headers={"Content-Type": "application/json",
+                                                             "User-Agent": "lockman-site/1.0", "Authorization": hdr})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                print(f"  {name}: HTTP {r.status} {r.read()[:150]!r}")
+        except urllib.error.HTTPError as ex:
+            print(f"  {name}: HTTP {ex.code} {ex.read()[:150]!r}")
+        except urllib.error.URLError as ex:
+            print(f"  {name}: connection failed {ex}")
 
 
 def channels():
@@ -127,6 +146,7 @@ def main():
         chs = channels()
     except BufferError as ex:
         print(f"Buffer: FAILED - {ex}")
+        diagnose()
         return 1
     print("Buffer key works. Channels:")
     for c in chs:
