@@ -53,6 +53,7 @@
   "articles": {
     "auto_publish": true,
     "gemini_model": "gemini-3.6-flash",
+    "publish_every_days": 3,
     "publish_window_start_hour": 8,
     "publish_window_end_hour": 20,
     "timezone": "America/Los_Angeles",

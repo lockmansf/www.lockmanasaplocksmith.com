@@ -1,4 +1,4 @@
-"""Publishes at most one original article per day, at a different hour each day.
+"""Publishes at most one original article per publish day (every config articles.publish_every_days days), at a different hour each day.
 
 Runs every hour (GitHub Actions). Each run:
   1. Picks today's publish hour (random, never the same as yesterday's).
@@ -142,11 +142,23 @@ def day_entry_for(log, day, start, end):
     return log["days"][key]
 
 
+def days_since_last_article(log, today):
+    dates = [dt.date.fromisoformat(k) for k, v in log["days"].items() if v.get("published")]
+    past = [d for d in dates if d < today]
+    return (today - max(past)).days if past else None
+
+
 def run(force_now=False, dry_run=False, now=None):
     cfg = common.load_config()
     acfg = cfg["articles"]
     now = now or dt.datetime.now(ZoneInfo(acfg["timezone"]))
     log = common.load_log()
+    every = int(acfg.get("publish_every_days", 1))
+    gap = days_since_last_article(log, now.date())
+    if not force_now and every > 1 and gap is not None and gap < every \
+            and not log["days"].get(now.date().isoformat(), {}).get("published"):
+        print(f"Not an article day. Last article {gap} day(s) ago; publishing every {every} days.")
+        return 0
     entry = day_entry_for(log, now.date(), acfg["publish_window_start_hour"], acfg["publish_window_end_hour"])
 
     if entry["published"]:

@@ -205,3 +205,12 @@ class TestBuild(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_days_since_last_article():
+    import datetime as dt
+    from publisher.publish import days_since_last_article
+    log = {"days": {"2026-11-01": {"published": "a"}, "2026-11-03": {"published": None}}}
+    assert days_since_last_article(log, dt.date(2026, 11, 3)) == 2
+    assert days_since_last_article(log, dt.date(2026, 11, 4)) == 3
+    assert days_since_last_article({"days": {}}, dt.date(2026, 11, 4)) is None
