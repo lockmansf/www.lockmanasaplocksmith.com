@@ -98,6 +98,12 @@
       "attempts": 1,
       "published": "signs-your-front-door-lock-needs-repair-before-it-fails",
       "failures": []
+    },
+    "2026-11-05": {
+      "target_hour": 19,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
