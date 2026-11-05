@@ -1,10 +1,19 @@
 [
   {
+    "slug": "lockman-rescues-dog-locked-in-car",
+    "title": "Lockman Rescues a Dog Locked in a Car",
+    "description": "A pup locked in a hot car in San Francisco? The Lockman signal lights up the sky and Lockman flies in to open the door safely, no damage. Locked out? Call (415) 806-7343.",
+    "category": "cars-car-keys",
+    "published_at": "2026-11-05T15:00:00-08:00",
+    "source_drive_ids": []
+  },
+  {
     "slug": "lockman-pier-39-and-chinatown",
     "title": "Lockman at Pier 39 and Chinatown",
     "description": "From the sea lions at Pier 39 to the lanterns of Chinatown, Lockman keeps San Francisco locked down tight.",
     "category": "tips-advice",
     "published_at": "2026-11-03T13:50:00-08:00",
-    "source_drive_ids": []
+    "source_drive_ids": [],
+    "buffer": {}
   }
 ]
