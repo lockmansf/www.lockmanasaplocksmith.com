@@ -5,7 +5,12 @@
     "description": "A pup locked in a hot car in San Francisco? The Lockman signal lights up the sky and Lockman flies in to open the door safely, no damage. Locked out? Call (415) 806-7343.",
     "category": "cars-car-keys",
     "published_at": "2026-11-05T15:00:00-08:00",
-    "source_drive_ids": []
+    "source_drive_ids": [],
+    "buffer": {
+      "6aeaf86de29c69a1715a5c7d": "6aed0a617b7e47e8f4f210d1",
+      "6aeaf81fe29c69a1715a5984": "6aed0a64dbada656bedae455",
+      "6aeaf771e29c69a1715a52ad": "6aed0a6f07f945cca927a01e"
+    }
   },
   {
     "slug": "lockman-pier-39-and-chinatown",
@@ -14,6 +19,10 @@
     "category": "tips-advice",
     "published_at": "2026-11-03T13:50:00-08:00",
     "source_drive_ids": [],
-    "buffer": {}
+    "buffer": {
+      "6aeaf86de29c69a1715a5c7d": "6aed0a8107f945cca927bb3e",
+      "6aeaf81fe29c69a1715a5984": "6aed0a88dbada656bedb1734",
+      "6aeaf771e29c69a1715a52ad": "6aed0a9586fe9b837959d142"
+    }
   }
 ]
