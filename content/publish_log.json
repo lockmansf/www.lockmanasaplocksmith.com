@@ -104,6 +104,12 @@
       "attempts": 0,
       "published": null,
       "failures": []
+    },
+    "2026-11-07": {
+      "target_hour": 19,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
