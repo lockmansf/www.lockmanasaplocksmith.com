@@ -107,8 +107,8 @@
     },
     "2026-11-07": {
       "target_hour": 19,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "rekeying-vs-replacing-locks-after-moving-into-a-new-sf-home",
       "failures": []
     }
   },
@@ -119,6 +119,7 @@
     "Locked your keys in the car in San Francisco: what to do while you wait",
     "Why you shouldn't try a coat hanger on a modern car door",
     "Car key broken in the door or ignition: next steps",
-    "Signs your front door lock needs repair before it fails"
+    "Signs your front door lock needs repair before it fails",
+    "Rekeying vs replacing locks: which makes sense after you move in"
   ]
 }
