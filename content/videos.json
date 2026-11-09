@@ -8,7 +8,12 @@
     "source_drive_ids": [
       "17WPMhAPi8p7u2hoFMyXl5qL0QhM72BEI",
       "1EKzaP_8lzqnXc8HFvU3VTFyhAWyNQX7R"
-    ]
+    ],
+    "buffer": {
+      "6aeaf86de29c69a1715a5c7d": "6af21f254edc9538caff147b",
+      "6aeaf81fe29c69a1715a5984": "6af21f27b3dd86936aa21c4a",
+      "6aeaf771e29c69a1715a52ad": "6af21f3229d3f56e691e3a29"
+    }
   },
   {
     "slug": "lockman-van-7th-street-soma",
