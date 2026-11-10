@@ -110,6 +110,12 @@
       "attempts": 1,
       "published": "rekeying-vs-replacing-locks-after-moving-into-a-new-sf-home",
       "failures": []
+    },
+    "2026-11-10": {
+      "target_hour": 12,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
