@@ -116,6 +116,12 @@
       "attempts": 1,
       "published": "what-a-licensed-california-locksmith-must-show-you",
       "failures": []
+    },
+    "2026-11-13": {
+      "target_hour": 16,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
