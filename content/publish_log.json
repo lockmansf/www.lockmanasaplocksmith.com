@@ -119,9 +119,15 @@
     },
     "2026-11-13": {
       "target_hour": 16,
-      "attempts": 0,
-      "published": null,
-      "failures": []
+      "attempts": 2,
+      "published": "how-to-spot-a-locksmith-scam-before-work-begins",
+      "failures": [
+        {
+          "at": "2026-11-13T17:11-08:00",
+          "topic": "How to spot a locksmith scam before you let someone near your door",
+          "reason": "Similar text found online: https://mr-locks.com/articles/how-to-choose-a-locksmith-in-nyc (21 words, 6%)"
+        }
+      ]
     }
   },
   "used_topics": [
@@ -133,6 +139,7 @@
     "Car key broken in the door or ignition: next steps",
     "Signs your front door lock needs repair before it fails",
     "Rekeying vs replacing locks: which makes sense after you move in",
-    "What a licensed California locksmith must show you (and why it protects you)"
+    "What a licensed California locksmith must show you (and why it protects you)",
+    "How to spot a locksmith scam before you let someone near your door"
   ]
 }
