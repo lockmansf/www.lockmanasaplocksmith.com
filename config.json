@@ -87,5 +87,11 @@
       "brand-card.jpg",
       "smart-gate.jpg"
     ]
+  },
+  "work_order_api": "",
+  "payments": {
+    "zelle": "",
+    "venmo": "",
+    "cashapp": ""
   }
 }

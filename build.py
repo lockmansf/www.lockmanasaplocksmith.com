@@ -811,6 +811,108 @@ def not_found(cfg):
         '<meta name="description"', '<meta name="robots" content="noindex">\n<meta name="description"', 1)
 
 
+# ---------------------------------------------------------------- work orders (owner + customer, not indexed)
+
+WO_TERMS = (
+    "I confirm that the information I gave is true and that I am the owner of the property or vehicle above, or that I am "
+    "authorized by the owner, and that I have the legal right to enter it. I authorize {name} (California Locksmith License "
+    "{lic}) to perform the service above. I understand that some locks cannot be opened without drilling or replacing them; "
+    "if that is needed it will be explained and priced before it is done. I approve the price shown, or the price confirmed "
+    "with me before work starts, and I agree to pay it when the job is done. I agree that {name} is not responsible for "
+    "pre-existing damage or wear to the lock, door or vehicle, or for any loss caused by false information I provided about "
+    "ownership or authorization. I agree that my ID, documents and this signed work order may be photographed and kept for "
+    "two years, as required by California Business and Professions Code 6980.55, and shown to a peace officer or the Bureau "
+    "of Security and Investigative Services on request."
+)
+
+
+def work_order(cfg):
+    pay = cfg.get("payments", {})
+    terms = WO_TERMS.format(name=e(cfg["business_name"]), lic=e(clean(cfg["license_number"])))
+    id_types = "".join(f"<option>{t}</option>" for t in ("Driver license", "State ID", "Passport", "Other photo ID"))
+    relations = "".join(f"<option>{t}</option>" for t in ("Owner", "Tenant", "Property manager", "Business owner", "Authorized employee", "Family member living here"))
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Work Order</h1>
+<p class="lead">{e(cfg['business_name'])} &middot; California Locksmith License {e(clean(cfg['license_number']))}</p></div></section>
+<section class="section"><div class="wrap wo" id="wo-app" data-api="{e(cfg.get('work_order_api', ''))}" data-zelle="{e(pay.get('zelle', ''))}" data-venmo="{e(pay.get('venmo', ''))}" data-cashapp="{e(pay.get('cashapp', ''))}">
+<p id="wo-terms-text" hidden>{terms}</p>
+
+<div data-view="loading"><p>Loading...</p></div>
+
+<div data-view="login" hidden><div class="card wo-narrow"><h2>Owner login</h2>
+<form id="wo-login-form"><label>PIN <input name="pin" type="password" inputmode="numeric" autocomplete="current-password" required></label>
+<button class="btn btn-call" type="submit">Open</button><p id="wo-login-msg" class="wo-msg"></p></form></div></div>
+
+<div data-view="owner" hidden>
+<div class="card"><h2>New work order</h2>
+<form id="wo-new-form" class="wo-grid">
+<label>Job type <select name="job_type" id="wo-new-type"></select></label>
+<label>Price (optional, $) <input name="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Set now or after the job"></label>
+<label>Customer phone (optional) <input name="phone" type="tel" placeholder="To text the link"></label>
+<label class="wo-wide">Job notes (optional) <input name="notes" placeholder="e.g. front door deadbolt, 2019 Honda Civic"></label>
+<button class="btn btn-call wo-wide" type="submit">Create work order</button>
+</form><div id="wo-created"></div></div>
+<div class="wo-bar"><h2>Recent jobs</h2><div class="btn-row"><button class="btn btn-ghost" id="wo-refresh" type="button">Refresh</button><button class="btn btn-ghost" id="wo-logout" type="button">Log out</button></div></div>
+<div id="wo-jobs"></div>
+</div>
+
+<div data-view="finish" hidden><div class="card wo-narrow"><h2>Finish job <span id="wo-finish-id"></span></h2>
+<form id="wo-finish-form"><input type="hidden" name="job">
+<label>Final price ($) <input name="final_price" type="number" min="0" step="0.01" inputmode="decimal" required></label>
+<label>Payment method <select name="method"><option value="">Not paid yet</option><option>Cash</option><option>Zelle</option><option>Venmo</option><option>Cash App</option><option>Card</option><option>Check</option></select></label>
+<label class="wo-check"><input type="checkbox" name="paid"> Customer already paid (send a receipt)</label>
+<div class="btn-row"><button class="btn btn-call" type="submit">Create invoice</button><button class="btn btn-ghost" type="button" id="wo-finish-cancel">Back</button></div>
+<p id="wo-finish-msg" class="wo-msg"></p></form></div></div>
+
+<div data-view="sign" hidden>
+<div class="card wo-summary"><p><strong>Service:</strong> <span id="wo-job-type"></span> &middot; <span id="wo-job-id"></span></p>
+<p><strong>Price:</strong> <span id="wo-job-price"></span></p><p id="wo-job-notes"></p></div>
+<form id="wo-sign-form" class="card wo-grid">
+<h2 class="wo-wide">Your details</h2>
+<label>Full name <input name="name" autocomplete="name" required></label>
+<label>Phone <input name="phone" type="tel" autocomplete="tel" required></label>
+<label>Email (for your copy) <input name="email" type="email" autocomplete="email"></label>
+<label>Date of birth <input name="dob" type="date" required></label>
+<label class="wo-wide">Service address <input name="address" autocomplete="street-address" required placeholder="Street, apt / unit, city"></label>
+<h2 class="wo-wide">Photo ID</h2>
+<label>ID type <select name="id_type">{id_types}</select></label>
+<label>ID number <input name="id_number" required autocomplete="off"></label>
+<label class="wo-wide">Photo of your ID <input name="id_photo" type="file" accept="image/*" capture="environment" required></label>
+<div class="wo-wide" data-for="property"><label>Your relation to the property <select name="relation">{relations}</select></label></div>
+<div class="wo-wide wo-grid" data-for="car" hidden>
+<h2 class="wo-wide">Vehicle</h2>
+<label>Year <input name="v_year" inputmode="numeric" data-req="1"></label>
+<label>Make <input name="v_make" placeholder="Toyota" data-req="1"></label>
+<label>Model <input name="v_model" placeholder="Camry" data-req="1"></label>
+<label>Color <input name="v_color"></label>
+<label>License plate <input name="plate" data-req="1"></label>
+<label>VIN (optional) <input name="vin"></label>
+</div>
+<div class="wo-wide" data-for="safe" hidden><label>Safe (brand, size, where it is) <input name="safe_info"></label></div>
+<label class="wo-wide">Proof documents (car registration, lease, utility bill, mail with this address; up to 4 photos)
+<input name="docs" type="file" accept="image/*" multiple></label>
+<h2 class="wo-wide">Authorization</h2>
+<p class="wo-wide wo-terms">{terms}</p>
+<label class="wo-check wo-wide" id="wo-price-ok-row" hidden><input type="checkbox" id="wo-price-ok"> I approve the price shown above.</label>
+<label class="wo-check wo-wide"><input type="checkbox" required> I have read and agree to the authorization above.</label>
+<div class="wo-wide"><p><strong>Sign here</strong></p><canvas id="wo-sig" class="wo-sig" aria-label="Signature box"></canvas>
+<button type="button" class="btn btn-ghost" id="wo-sig-clear">Clear signature</button></div>
+<button class="btn btn-call btn-lg wo-wide" type="submit">Sign and send</button>
+<p id="wo-sign-msg" class="wo-msg wo-wide"></p>
+<p class="wo-wide wo-small">Your information is sent securely and kept only by {e(cfg['business_name'])} as required by California law. See our <a href="/privacy/">privacy policy</a>.</p>
+</form></div>
+
+<div data-view="done" hidden><div class="card wo-narrow"><h2>Work order</h2><p id="wo-done-text"></p>
+<p>Questions? Call <a href="{tel(cfg)}">{e(clean(cfg['phone_display']))}</a>.</p></div></div>
+
+<div data-view="invoice" hidden><div class="card wo-narrow" id="wo-invoice"></div></div>
+</div></section>
+<script src="/assets/workorder.js" defer></script>"""
+    html_out = page(cfg, path="/work-order/", title="Work Order", description="Work order and authorization form.", body=body).replace(
+        '<meta name="description"', '<meta name="robots" content="noindex, nofollow">\n<meta name="description"', 1)
+    # private page with ID data: no analytics and no cookie banner (it would also cover the signature box)
+    return re.sub(r' data-ga-id="[^"]*"', "", html_out, count=1)
+
+
 # ---------------------------------------------------------------- feeds
 
 def sitemap(cfg, urls):
@@ -912,6 +1014,7 @@ def build():
     add("/privacy/", privacy(cfg))
     add("/terms/", terms(cfg))
     add("/accessibility/", accessibility(cfg))
+    write("/work-order/", work_order(cfg))  # owner tool + customer signing page, kept out of the sitemap
     write("/404.html", not_found(cfg))
     write("/sitemap.xml", sitemap(cfg, urls))
     write("/robots.txt", robots(cfg))
