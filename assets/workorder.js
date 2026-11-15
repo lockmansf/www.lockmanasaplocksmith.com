@@ -76,7 +76,7 @@
     var a = Number(amount) || 0, rows = [];
     if (PAY.venmo) rows.push('<a class="btn btn-ghost" href="https://venmo.com/u/' + encodeURIComponent(PAY.venmo) + '?txn=pay&amount=' + a.toFixed(2) + '&note=' + encodeURIComponent(id) + '" rel="noopener">Pay with Venmo</a>');
     if (PAY.cashapp) rows.push('<a class="btn btn-ghost" href="https://cash.app/$' + encodeURIComponent(PAY.cashapp) + '/' + a.toFixed(2) + '" rel="noopener">Pay with Cash App</a>');
-    if (PAY.zelle) rows.push('<p><strong>Zelle:</strong> ' + esc(PAY.zelle) + ' (note: ' + esc(id) + ')</p>');
+    if (PAY.zelle) rows.push('<p><strong>Zelle:</strong> ' + esc(PAY.zelle) + ' (note: ' + esc(id) + ')</p><p><img src="/assets/img/zelle-qr.png" alt="Zelle QR code for Lockman ASAP Locksmith Inc" width="200" height="200"><br><small>Scan in your bank app to pay with Zelle</small></p>');
     rows.push('<p>Cash or card in person is also fine.</p>');
     return '<div class="wo-pay">' + rows.join('') + '</div>';
   }
