@@ -6,6 +6,7 @@
   var PAY = { zelle: root.dataset.zelle || '', venmo: root.dataset.venmo || '', cashapp: root.dataset.cashapp || '', review: root.dataset.review || '' };
   var TERMS = document.getElementById('wo-terms-text').textContent.trim();
   var qs = new URLSearchParams(location.search);
+  var MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   var $ = function (s, el) { return (el || document).querySelector(s); };
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
@@ -177,14 +178,21 @@
     if (digits.length === 10) digits = '1' + digits;
     $('#wo-created').innerHTML = '<div class="card"><h3>Work order ' + esc(id) + ' is ready</h3><div class="btn-row">' +
       '<a class="btn btn-call" href="' + esc(link) + '">Customer signs on my phone</a>' +
-      '<a class="btn btn-ghost" href="sms:' + (digits ? '+' + digits : '') + '?&body=' + encodeURIComponent(text) + '">Send by text</a>' +
+      (MOBILE ? '<a class="btn btn-ghost" href="sms:' + (digits ? '+' + digits : '') + (/iPhone|iPad/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text) + '">Send by text</a>'
+        : '<button class="btn btn-ghost" type="button" data-copy="' + esc(text) + '" data-note="Copied! Text messages open only on a phone. Paste this into a text or email.">Copy text message</button>') +
       '<a class="btn btn-wa" href="https://wa.me/' + digits + '?text=' + encodeURIComponent(text) + '" rel="noopener">WhatsApp</a>' +
       '<button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button></div></div>';
   }
 
   root.addEventListener('click', function (ev) {
     var c = ev.target.closest('[data-copy]');
-    if (c) { navigator.clipboard.writeText(c.dataset.copy).then(function () { c.textContent = 'Copied!'; }); return; }
+    if (c) {
+      navigator.clipboard.writeText(c.dataset.copy).then(function () {
+        c.textContent = 'Copied!';
+        if (c.dataset.note) { var n = document.createElement('p'); n.className = 'wo-msg'; n.textContent = c.dataset.note; c.parentNode.after(n); c.removeAttribute('data-note'); }
+      });
+      return;
+    }
     var fin = ev.target.closest('[data-finish]');
     if (fin) {
       var f = $('#wo-finish-form');
