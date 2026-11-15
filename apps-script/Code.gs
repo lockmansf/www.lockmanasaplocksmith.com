@@ -18,6 +18,7 @@ var BUSINESS = {
   phone: '(415) 806-7343',
   email: 'billinglockman@gmail.com',
   site: 'https://lockmanasaplocksmith.com',
+  review: 'https://g.page/r/CQihC5bClvdNEBM/review',
   city: 'San Francisco, CA'
 };
 
@@ -222,7 +223,8 @@ function finish(req) {
     MailApp.sendEmail({ to: j.email, subject: (j.paid ? 'Receipt ' : 'Invoice ') + j.id + ' from ' + BUSINESS.name,
       name: BUSINESS.name, replyTo: BUSINESS.email,
       body: (j.paid ? 'Thank you for your payment. Your receipt is attached.' : 'Your invoice is attached.') +
-        '\n\nView online: ' + BUSINESS.site + '/work-order/?j=' + j.id + '&t=' + j.token + '\n\n' + BUSINESS.name + '\n' + BUSINESS.phone,
+        '\n\nView online: ' + BUSINESS.site + '/work-order/?j=' + j.id + '&t=' + j.token +
+        '\n\nHappy with the service? A quick Google review helps us a lot:\n' + BUSINESS.review + '\n\nThank you!\n' + BUSINESS.name + '\n' + BUSINESS.phone,
       attachments: [pdf.getAs('application/pdf')] });
   }
   MailApp.sendEmail({ to: BUSINESS.email, subject: 'Invoice ' + j.id + ' ' + money(j.final_price) + (j.paid ? ' PAID' : ''),
@@ -305,5 +307,6 @@ function invoiceHtml(j, pay) {
   ]) + '<p class="total">Total: ' + money(j.final_price) + '</p>' +
     (j.paid ? '<p class="total" style="color:#128c4a">PAID' + (j.payment_method ? ' by ' + esc(j.payment_method) : '') + '</p>'
       : '<p><b>How to pay</b><br>' + payLines.map(esc).join('<br>') + '</p><p>Please include ' + esc(j.id) + ' in the payment note.</p>') +
-    '<p>Thank you for choosing ' + esc(BUSINESS.name) + '!</p>';
+    '<p>Thank you for choosing ' + esc(BUSINESS.name) + '!</p>' +
+    '<p><b>Happy with the service?</b> Please leave us a Google review: ' + esc(BUSINESS.review) + '</p>';
 }

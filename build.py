@@ -833,7 +833,7 @@ def work_order(cfg):
     relations = "".join(f"<option>{t}</option>" for t in ("Owner", "Tenant", "Property manager", "Business owner", "Authorized employee", "Family member living here"))
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Work Order</h1>
 <p class="lead">{e(cfg['business_name'])} &middot; California Locksmith License {e(clean(cfg['license_number']))}</p></div></section>
-<section class="section"><div class="wrap wo" id="wo-app" data-api="{e(cfg.get('work_order_api', ''))}" data-zelle="{e(pay.get('zelle', ''))}" data-venmo="{e(pay.get('venmo', ''))}" data-cashapp="{e(pay.get('cashapp', ''))}">
+<section class="section"><div class="wrap wo" id="wo-app" data-api="{e(cfg.get('work_order_api', ''))}" data-zelle="{e(pay.get('zelle', ''))}" data-venmo="{e(pay.get('venmo', ''))}" data-cashapp="{e(pay.get('cashapp', ''))}" data-review="{e(cfg.get('google_review_url', ''))}">
 <p id="wo-terms-text" hidden>{terms}</p>
 
 <div data-view="loading"><p>Loading...</p></div>

@@ -3,7 +3,7 @@
   var root = document.getElementById('wo-app');
   if (!root) return;
   var API = root.dataset.api;
-  var PAY = { zelle: root.dataset.zelle || '', venmo: root.dataset.venmo || '', cashapp: root.dataset.cashapp || '' };
+  var PAY = { zelle: root.dataset.zelle || '', venmo: root.dataset.venmo || '', cashapp: root.dataset.cashapp || '', review: root.dataset.review || '' };
   var TERMS = document.getElementById('wo-terms-text').textContent.trim();
   var qs = new URLSearchParams(location.search);
   var $ = function (s, el) { return (el || document).querySelector(s); };
@@ -89,7 +89,8 @@
         $('#wo-invoice').innerHTML = '<h2 class="comic">' + (inv.paid ? 'Receipt' : 'Invoice') + ' ' + esc(j.id) + '</h2>' +
           '<p>' + esc(j.job_type) + (inv.address ? ' at ' + esc(inv.address) : '') + (inv.vehicle ? ' (' + esc(inv.vehicle) + ')' : '') + '</p>' +
           '<p class="wo-total">Total: ' + money(inv.final_price) + '</p>' +
-          (inv.paid ? '<p class="wo-paid">PAID' + (inv.payment_method ? ' by ' + esc(inv.payment_method) : '') + '. Thank you!</p>' : payBlock(j.id, inv.final_price));
+          (inv.paid ? '<p class="wo-paid">PAID' + (inv.payment_method ? ' by ' + esc(inv.payment_method) : '') + '. Thank you!</p>' : payBlock(j.id, inv.final_price)) +
+          (PAY.review ? '<div class="wo-review"><p><strong>Happy with the service?</strong> A quick Google review helps a small local business a lot.</p><a class="btn btn-call btn-lg" href="' + esc(PAY.review) + '" target="_blank" rel="noopener">&#11088; Leave a Google review</a></div>' : '');
         return show('invoice');
       }
       if (j.status !== 'Sent') { $('#wo-done-text').textContent = 'This work order (' + j.id + ') is already signed. Thank you!'; return show('done'); }
