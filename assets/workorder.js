@@ -111,14 +111,14 @@
         var f = ev.target, out = $('#wo-sign-msg');
         if (pad.empty()) return msg(out, 'Please sign in the box.', true);
         var idFile = f.id_photo.files[0];
-        if (!idFile) return msg(out, 'Please add a photo of your ID.', true);
+        if (!idFile && !f.id_in_person.checked) return msg(out, 'Add a photo of your ID, or tick the box that you will show your ID to the technician.', true);
         var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
         msg(out, 'Sending... please wait.');
         var docFiles = [].slice.call(f.docs.files || []).slice(0, 4);
-        Promise.all([shrink(idFile, 1600)].concat(docFiles.map(function (d) { return shrink(d, 1600); }))).then(function (imgs) {
+        Promise.all([idFile ? shrink(idFile, 1600) : Promise.resolve('')].concat(docFiles.map(function (d) { return shrink(d, 1600); }))).then(function (imgs) {
           var veh = [f.v_year.value, f.v_make.value, f.v_model.value, f.v_color.value].filter(Boolean).join(' ');
           return call({
-            action: 'sign', id: id, token: token, id_photo: imgs[0], docs: imgs.slice(1), signature: pad.data(), terms_text: TERMS,
+            action: 'sign', id: id, token: token, id_photo: imgs[0], id_in_person: !idFile && f.id_in_person.checked, docs: imgs.slice(1), signature: pad.data(), terms_text: TERMS,
             customer: {
               customer_name: f.name.value.trim(), phone: f.phone.value.trim(), email: f.email.value.trim(), dob: f.dob.value,
               address: f.address.value.trim(), id_type: f.id_type.value, id_number: f.id_number.value.trim(),
@@ -156,11 +156,12 @@
         var link = customerLink(j.id, j.token);
         return '<div class="card wo-job"><p class="wo-job-head"><strong>' + esc(j.id) + '</strong> &middot; ' + esc(j.job_type) +
           ' <span class="wo-status s-' + esc(String(j.status).toLowerCase()) + '">' + esc(j.status) + '</span></p>' +
+          (j.status === 'Signed' && j.id_check && j.id_check !== 'Photo uploaded' ? '<p class="wo-msg bad">Check ID in person before starting</p>' : '') +
           '<p>' + esc(j.customer_name || 'Waiting for customer') + (j.address ? ' &middot; ' + esc(j.address) : '') + '<br>' + esc(j.created) +
           (j.final_price !== '' ? ' &middot; ' + money(j.final_price) : (j.price !== '' ? ' &middot; est. ' + money(j.price) : '')) + '</p>' +
           '<div class="btn-row">' +
           (j.status === 'Sent' ? '<a class="btn btn-call" href="' + esc(link) + '">Customer signs here</a><button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button>' : '') +
-          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-price="' + esc(j.price) + '">Finish &amp; invoice</button>' : '') +
+          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-price="' + esc(j.price) + '" data-idcheck="' + esc(j.id_check) + '">Finish &amp; invoice</button>' : '') +
           (j.status === 'Invoiced' || j.status === 'Paid' ? '<a class="btn btn-ghost" href="' + esc(link) + '">View invoice</a>' : '') +
           (j.folder_url ? '<a class="btn btn-ghost" href="' + esc(j.folder_url) + '" target="_blank" rel="noopener">Files</a>' : '') +
           '</div></div>';
@@ -188,6 +189,8 @@
       var f = $('#wo-finish-form');
       f.job.value = fin.dataset.finish; f.final_price.value = fin.dataset.price || '';
       $('#wo-finish-id').textContent = fin.dataset.finish;
+      var inPerson = fin.dataset.idcheck && fin.dataset.idcheck !== 'Photo uploaded';
+      $('#wo-idv-row').hidden = !inPerson; f.id_verified.checked = false; f.id_verified.required = inPerson;
       msg($('#wo-finish-msg'), '');
       show('finish');
     }
@@ -209,7 +212,7 @@
     var f = ev.target, b = f.querySelector('button[type=submit]'); b.disabled = true;
     msg($('#wo-finish-msg'), 'Creating invoice...');
     call({ action: 'finish', pin: store('wo-pin'), id: f.job.value, final_price: f.final_price.value, payment_method: f.method.value,
-      paid: f.paid.checked, payments: PAY })
+      paid: f.paid.checked, id_verified: f.id_verified.checked, payments: PAY })
       .then(function () { show('owner'); refresh(); })
       .catch(function (err) { msg($('#wo-finish-msg'), err.message, true); })
       .then(function () { b.disabled = false; });

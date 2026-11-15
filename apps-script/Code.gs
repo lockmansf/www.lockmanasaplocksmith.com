@@ -23,7 +23,8 @@ var BUSINESS = {
 
 var COLUMNS = ['id', 'token', 'status', 'created', 'job_type', 'price', 'job_notes', 'customer_name', 'phone', 'email',
   'dob', 'address', 'id_type', 'id_number', 'relation', 'vehicle', 'plate', 'vin', 'safe_info', 'signed_at',
-  'final_price', 'payment_method', 'paid', 'invoiced_at', 'folder_url', 'work_order_pdf', 'invoice_pdf'];
+  'final_price', 'payment_method', 'paid', 'invoiced_at', 'folder_url', 'work_order_pdf', 'invoice_pdf',
+  'id_check', 'id_verified_onsite'];
 
 var JOB_TYPES = ['Car lockout', 'House lockout', 'Business lockout', 'Safe lockout', 'Rekey house', 'Rekey business',
   'Car key made', 'Lock change / repair', 'Other'];
@@ -88,7 +89,11 @@ function checkPin(pin) {
 
 // ------------------------------------------------------------------ sheet helpers
 
-function sheet() { return SpreadsheetApp.openById(props().getProperty('SHEET_ID')).getSheetByName('Jobs'); }
+function sheet() {
+  var sh = SpreadsheetApp.openById(props().getProperty('SHEET_ID')).getSheetByName('Jobs');
+  if (sh.getLastColumn() < COLUMNS.length) sh.getRange(1, 1, 1, COLUMNS.length).setValues([COLUMNS]);  // add new columns
+  return sh;
+}
 
 function findRow(id) {
   var sh = sheet();
@@ -166,7 +171,8 @@ function sign(req) {
   ['customer_name', 'phone', 'dob', 'address', 'id_type', 'id_number'].forEach(function (k) {
     if (!c[k]) throw new Error('Missing ' + k);
   });
-  if (!req.id_photo || !req.signature) throw new Error('ID photo and signature are required');
+  if (!req.signature) throw new Error('Signature is required');
+  if (!req.id_photo && !req.id_in_person) throw new Error('Add a photo of your ID, or confirm you will show it to the technician');
   var root = DriveApp.getFolderById(props().getProperty('ROOT_FOLDER_ID'));
   var folder = root.createFolder(j.id + ' ' + c.customer_name + ' - ' + j.job_type);
   saveImage(folder, req.id_photo, 'id-photo.jpg');
@@ -175,6 +181,7 @@ function sign(req) {
 
   var tz = Session.getScriptTimeZone();
   Object.keys(c).forEach(function (k) { if (COLUMNS.indexOf(k) >= 0 && k !== 'id' && k !== 'token') j[k] = c[k]; });
+  j.id_check = req.id_photo ? 'Photo uploaded' : 'Customer will show ID to technician on site';
   j.signed_at = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
   j.status = 'Signed';
   j.folder_url = folder.getUrl();
@@ -201,6 +208,8 @@ function finish(req) {
   var tz = Session.getScriptTimeZone();
   j.final_price = Number(req.final_price);
   if (isNaN(j.final_price)) throw new Error('Enter the final price');
+  if (j.id_check !== 'Photo uploaded' && !req.id_verified) throw new Error('Check the customer ID in person and tick the ID box first.');
+  if (req.id_verified) j.id_verified_onsite = 'Yes, ' + Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
   j.payment_method = req.payment_method || '';
   j.paid = !!req.paid;
   j.invoiced_at = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
@@ -231,7 +240,8 @@ function listJobs() {
     var o = {};
     COLUMNS.forEach(function (c, i) { o[c] = v[i]; });
     return { id: o.id, token: o.token, status: o.status, created: String(o.created), job_type: o.job_type, price: o.price,
-      customer_name: o.customer_name, address: o.address, final_price: o.final_price, folder_url: o.folder_url };
+      customer_name: o.customer_name, address: o.address, final_price: o.final_price, folder_url: o.folder_url,
+      id_check: o.id_check };
   }).reverse();
   return { ok: true, jobs: jobs };
 }
@@ -265,14 +275,16 @@ function rows(pairs) {
 }
 
 function workOrderHtml(j, req) {
-  var imgs = '<p><b>Customer ID photo</b><br><img src="' + req.id_photo + '" style="max-width:360px;max-height:260px"></p>';
+  var imgs = req.id_photo
+    ? '<p><b>Customer ID photo</b><br><img src="' + req.id_photo + '" style="max-width:360px;max-height:260px"></p>'
+    : '<p><b>ID photo:</b> not uploaded. Customer confirmed they have a valid photo ID and will show it to the technician on site for verification.</p>';
   (req.docs || []).forEach(function (d, i) {
     imgs += '<p><b>Document ' + (i + 1) + '</b><br><img src="' + d + '" style="max-width:360px;max-height:260px"></p>';
   });
   return DOC_CSS + header('Work Order', j) + rows([
     ['Date', j.signed_at], ['Service', j.job_type], ['Approved price', money(j.price) || 'To be confirmed before work'],
     ['Job notes', j.job_notes], ['Customer name', j.customer_name], ['Phone', j.phone], ['Email', j.email],
-    ['Date of birth', j.dob], ['Service address', j.address], ['ID type / number', j.id_type + ' ' + j.id_number],
+    ['Date of birth', j.dob], ['Service address', j.address], ['ID type / number', j.id_type + ' ' + j.id_number], ['ID check', j.id_check],
     ['Relation to property', j.relation], ['Vehicle (year, make, model, color)', j.vehicle], ['License plate', j.plate],
     ['VIN', j.vin], ['Safe', j.safe_info], ['Locksmith', BUSINESS.name + ', License ' + BUSINESS.license]
   ]) + '<p class="small">' + esc(req.terms_text || '') + '</p>' +
@@ -288,7 +300,8 @@ function invoiceHtml(j, pay) {
   payLines.push('Cash or card in person');
   return DOC_CSS + header(j.paid ? 'Receipt' : 'Invoice', j) + rows([
     ['Invoice date', j.invoiced_at], ['Customer', j.customer_name], ['Phone', j.phone], ['Service address', j.address],
-    ['Vehicle', j.vehicle], ['Service', j.job_type], ['Notes', j.job_notes], ['Work order signed', j.signed_at]
+    ['Vehicle', j.vehicle], ['Service', j.job_type], ['Notes', j.job_notes], ['Work order signed', j.signed_at],
+    ['ID verified on site', j.id_verified_onsite]
   ]) + '<p class="total">Total: ' + money(j.final_price) + '</p>' +
     (j.paid ? '<p class="total" style="color:#128c4a">PAID' + (j.payment_method ? ' by ' + esc(j.payment_method) : '') + '</p>'
       : '<p><b>How to pay</b><br>' + payLines.map(esc).join('<br>') + '</p><p>Please include ' + esc(j.id) + ' in the payment note.</p>') +

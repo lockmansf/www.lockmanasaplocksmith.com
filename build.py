@@ -859,6 +859,7 @@ def work_order(cfg):
 <form id="wo-finish-form"><input type="hidden" name="job">
 <label>Final price ($) <input name="final_price" type="number" min="0" step="0.01" inputmode="decimal" required></label>
 <label>Payment method <select name="method"><option value="">Not paid yet</option><option>Cash</option><option>Zelle</option><option>Venmo</option><option>Cash App</option><option>Card</option><option>Check</option></select></label>
+<label class="wo-check" id="wo-idv-row" hidden><input type="checkbox" name="id_verified"> I checked the customer's photo ID in person: the name and photo match.</label>
 <label class="wo-check"><input type="checkbox" name="paid"> Customer already paid (send a receipt)</label>
 <div class="btn-row"><button class="btn btn-call" type="submit">Create invoice</button><button class="btn btn-ghost" type="button" id="wo-finish-cancel">Back</button></div>
 <p id="wo-finish-msg" class="wo-msg"></p></form></div></div>
@@ -876,7 +877,8 @@ def work_order(cfg):
 <h2 class="wo-wide">Photo ID</h2>
 <label>ID type <select name="id_type">{id_types}</select></label>
 <label>ID number <input name="id_number" required autocomplete="off"></label>
-<label class="wo-wide">Photo of your ID <input name="id_photo" type="file" accept="image/*" capture="environment" required></label>
+<label class="wo-wide">Photo of your ID (optional) <input name="id_photo" type="file" accept="image/*" capture="environment"></label>
+<label class="wo-check wo-wide"><input type="checkbox" name="id_in_person"> I prefer not to upload my ID. I confirm I have a valid photo ID and I will show it to the technician on site for verification before any work starts.</label>
 <div class="wo-wide" data-for="property"><label>Your relation to the property <select name="relation">{relations}</select></label></div>
 <div class="wo-wide wo-grid" data-for="car" hidden>
 <h2 class="wo-wide">Vehicle</h2>
