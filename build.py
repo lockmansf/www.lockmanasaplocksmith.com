@@ -292,6 +292,7 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
       <p class="footer-head">Contact</p>
       <p><a href="{tel(cfg)}">{phone}</a></p>
       <p><a href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a></p>
+      {('<p>' + book_btn(cfg, cls="", label="Book online") + '</p>') if cfg.get("booking_url") else ""}
       <p>{e(clean(cfg['hours_text']))}</p>
       {social_html(cfg)}
     </div>
@@ -338,6 +339,7 @@ def cta_block(cfg, heading="Locked out? Key broken? Lock stuck?"):
     <div class="btn-row">
       <a class="btn btn-call btn-lg" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
       <a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp us</a>
+      {book_btn(cfg)}
     </div>
   </div>
 </section>"""
@@ -434,6 +436,7 @@ def home(cfg, articles):
       <div class="btn-row">
         <a class="btn btn-call btn-lg" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
         <a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a>
+        {book_btn(cfg)}
       </div>
       <ul class="trust">
         <li>CA License {e(clean(cfg['license_number']))}</li>
@@ -533,7 +536,8 @@ def service_page(cfg, s):
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">{e(s['title'])}</h1>
 <p class="lead">{e(s['intro'])}</p>
 <div class="btn-row"><a class="btn btn-call btn-lg" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
-<a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a></div></div></section>
+<a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a>
+{book_btn(cfg)}</div></div></section>
 <section class="section"><div class="wrap two-col">
 <div><h2 class="comic">What to expect</h2><ul class="points">{points}</ul></div>
 <aside class="panel"><h2 class="comic">Other services</h2><ul class="plain">{others}</ul>
@@ -580,11 +584,18 @@ def about(cfg):
                 body=body, crumbs=[("/", "Home"), ("/about/", "About")])
 
 
-def booking_card(cfg):
-    url = cfg.get("social", {}).get("nimbus")
+def book_btn(cfg, cls="btn btn-ghost btn-lg", label="Book online"):
+    url = cfg.get("booking_url")
     if not url:
         return ""
-    return f"""<div class="card"><h2>Book online</h2><p><a class="btn btn-ghost" href="{e(url)}" rel="noopener">Book on Nimbus</a></p><p>Schedule non-emergency work like lock repair or smart lock installation.</p></div>"""
+    return f'<a class="{cls}" href="{e(url)}" target="_blank" rel="noopener">{label}</a>'
+
+
+def booking_card(cfg):
+    url = cfg.get("booking_url") or cfg.get("social", {}).get("nimbus")
+    if not url:
+        return ""
+    return f"""<div class="card"><h2>Book online</h2><p><a class="btn btn-ghost" href="{e(url)}" target="_blank" rel="noopener">Pick a time</a></p><p>Schedule non-emergency work like lock repair, rekeying or smart lock installation.</p></div>"""
 
 
 def contact(cfg):
