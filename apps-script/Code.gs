@@ -213,13 +213,14 @@ function finish(req) {
   if (req.id_verified) j.id_verified_onsite = 'Yes, ' + Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
   j.payment_method = req.payment_method || '';
   j.paid = !!req.paid;
+  if (req.email !== undefined) j.email = String(req.email || '').trim();
   j.invoiced_at = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
   j.status = j.paid ? 'Paid' : 'Invoiced';
   var folder = DriveApp.getFileById(idFromUrl(j.work_order_pdf)).getParents().next();
   var pdf = folder.createFile(htmlPdf(invoiceHtml(j, req.payments || {}), j.id + ' invoice.pdf'));
   j.invoice_pdf = pdf.getUrl();
   writeRow(r, j);
-  if (j.email) {
+  if (j.email && req.send_email !== false) {
     MailApp.sendEmail({ to: j.email, subject: (j.paid ? 'Receipt ' : 'Invoice ') + j.id + ' from ' + BUSINESS.name,
       name: BUSINESS.name, replyTo: BUSINESS.email,
       body: (j.paid ? 'Thank you for your payment. Your receipt is attached.' : 'Your invoice is attached.') +
@@ -229,7 +230,7 @@ function finish(req) {
   }
   MailApp.sendEmail({ to: BUSINESS.email, subject: 'Invoice ' + j.id + ' ' + money(j.final_price) + (j.paid ? ' PAID' : ''),
     body: 'Invoice attached.', attachments: [pdf.getAs('application/pdf')] });
-  return { ok: true, id: j.id, status: j.status };
+  return { ok: true, id: j.id, status: j.status, emailed: !!(j.email && req.send_email !== false) };
 }
 
 function listJobs() {
@@ -242,7 +243,7 @@ function listJobs() {
     var o = {};
     COLUMNS.forEach(function (c, i) { o[c] = v[i]; });
     return { id: o.id, token: o.token, status: o.status, created: String(o.created), job_type: o.job_type, price: o.price,
-      customer_name: o.customer_name, phone: String(o.phone || ""), address: o.address, final_price: o.final_price, folder_url: o.folder_url,
+      customer_name: o.customer_name, phone: String(o.phone || ""), email: String(o.email || ""), address: o.address, final_price: o.final_price, folder_url: o.folder_url,
       id_check: o.id_check };
   }).reverse();
   return { ok: true, jobs: jobs };

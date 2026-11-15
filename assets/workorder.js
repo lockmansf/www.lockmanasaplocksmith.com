@@ -163,7 +163,7 @@
           (j.final_price !== '' ? ' &middot; ' + money(j.final_price) : (j.price !== '' ? ' &middot; est. ' + money(j.price) : '')) + '</p>' +
           '<div class="btn-row">' +
           (j.status === 'Sent' ? '<a class="btn btn-call" href="' + esc(link) + '">Customer signs here</a><button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button>' : '') +
-          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-token="' + esc(j.token) + '" data-phone="' + esc(j.phone || '') + '" data-price="' + esc(j.price) + '" data-idcheck="' + esc(j.id_check) + '">&#9989; Job done &rarr; invoice</button>' : '') +
+          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-token="' + esc(j.token) + '" data-phone="' + esc(j.phone || '') + '" data-email="' + esc(j.email || '') + '" data-price="' + esc(j.price) + '" data-idcheck="' + esc(j.id_check) + '">&#9989; Job done &rarr; invoice</button>' : '') +
           (j.status === 'Invoiced' || j.status === 'Paid' ? '<a class="btn btn-ghost" href="' + esc(link) + '">View invoice</a><button class="btn btn-ghost" type="button" data-sendinv="' + esc(j.id) + '" data-token="' + esc(j.token) + '" data-phone="' + esc(j.phone || '') + '">Send invoice</button>' : '') +
           (j.folder_url ? '<a class="btn btn-ghost" href="' + esc(j.folder_url) + '" target="_blank" rel="noopener">Files</a>' : '') +
           '</div></div>';
@@ -179,10 +179,10 @@
       '<a class="btn btn-wa" href="https://wa.me/' + digits + '?text=' + encodeURIComponent(text) + '" rel="noopener">WhatsApp</a>';
   }
 
-  function invoiceCard(id, token, phone, status) {
+  function invoiceCard(id, token, phone, status, emailedTo) {
     var link = customerLink(id, token);
     var text = 'Lockman ASAP Locksmith: thank you! Your ' + (status === 'Paid' ? 'receipt' : 'invoice') + ' ' + id + ' is here: ' + link;
-    $('#wo-created').innerHTML = '<div class="card"><h3>' + (status === 'Paid' ? 'Receipt' : 'Invoice') + ' ' + esc(id) + ' is ready. Send it to the customer:</h3><div class="btn-row">' +
+    $('#wo-created').innerHTML = '<div class="card"><h3>' + (status === 'Paid' ? 'Receipt' : 'Invoice') + ' ' + esc(id) + ' is ready.</h3>' + (emailedTo ? '<p>&#9993; Emailed to ' + esc(emailedTo) + '</p>' : '') + '<p>Send it to the customer by text:</p><div class="btn-row">' +
       '<a class="btn btn-call" href="' + esc(link) + '">Show customer on my phone</a>' + shareRow(text, phone) +
       '<button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button></div></div>';
     $('#wo-created').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -217,6 +217,7 @@
       var f = $('#wo-finish-form');
       f.job.value = fin.dataset.finish; f.final_price.value = fin.dataset.price || '';
       f.dataset.token = fin.dataset.token; f.dataset.phone = fin.dataset.phone;
+      f.email.value = fin.dataset.email || ''; f.send_email.checked = !!fin.dataset.email;
       $('#wo-finish-id').textContent = fin.dataset.finish;
       var inPerson = fin.dataset.idcheck && fin.dataset.idcheck !== 'Photo uploaded';
       $('#wo-idv-row').hidden = !inPerson; f.id_verified.checked = false; f.id_verified.required = inPerson;
@@ -241,8 +242,8 @@
     var f = ev.target, b = f.querySelector('button[type=submit]'); b.disabled = true;
     msg($('#wo-finish-msg'), 'Creating invoice...');
     call({ action: 'finish', pin: store('wo-pin'), id: f.job.value, final_price: f.final_price.value, payment_method: f.method.value,
-      paid: f.paid.checked, id_verified: f.id_verified.checked, payments: PAY })
-      .then(function (r) { show('owner'); refresh(); invoiceCard(f.job.value, f.dataset.token, f.dataset.phone, r.status); })
+      paid: f.paid.checked, id_verified: f.id_verified.checked, email: f.email.value, send_email: f.send_email.checked, payments: PAY })
+      .then(function (r) { show('owner'); refresh(); invoiceCard(f.job.value, f.dataset.token, f.dataset.phone, r.status, r.emailed ? f.email.value : ''); })
       .catch(function (err) { msg($('#wo-finish-msg'), err.message, true); })
       .then(function () { b.disabled = false; });
   };

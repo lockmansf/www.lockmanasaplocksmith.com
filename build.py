@@ -859,6 +859,8 @@ def work_order(cfg):
 <form id="wo-finish-form"><input type="hidden" name="job">
 <label>Final price ($) <input name="final_price" type="number" min="0" step="0.01" inputmode="decimal" required></label>
 <label>Payment method <select name="method"><option value="">Not paid yet</option><option>Cash</option><option>Zelle</option><option>Venmo</option><option>Cash App</option><option>Card</option><option>Check</option></select></label>
+<label>Customer email (optional) <input name="email" type="email" placeholder="To email the invoice"></label>
+<label class="wo-check"><input type="checkbox" name="send_email"> Email the invoice to the customer</label>
 <label class="wo-check" id="wo-idv-row" hidden><input type="checkbox" name="id_verified"> I checked the customer's photo ID in person: the name and photo match.</label>
 <label class="wo-check"><input type="checkbox" name="paid"> Customer already paid (send a receipt)</label>
 <div class="btn-row"><button class="btn btn-call" type="submit">Create invoice</button><button class="btn btn-ghost" type="button" id="wo-finish-cancel">Back</button></div>
