@@ -855,7 +855,7 @@ def work_order(cfg):
 <div id="wo-jobs"></div>
 </div>
 
-<div data-view="finish" hidden><div class="card wo-narrow"><h2>Finish job <span id="wo-finish-id"></span></h2>
+<div data-view="finish" hidden><div class="card wo-narrow"><h2>Job done: <span id="wo-finish-id"></span></h2><p>Enter the final price. The invoice is created and you can send it to the customer.</p>
 <form id="wo-finish-form"><input type="hidden" name="job">
 <label>Final price ($) <input name="final_price" type="number" min="0" step="0.01" inputmode="decimal" required></label>
 <label>Payment method <select name="method"><option value="">Not paid yet</option><option>Cash</option><option>Zelle</option><option>Venmo</option><option>Cash App</option><option>Card</option><option>Check</option></select></label>

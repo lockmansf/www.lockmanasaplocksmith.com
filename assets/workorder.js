@@ -163,12 +163,29 @@
           (j.final_price !== '' ? ' &middot; ' + money(j.final_price) : (j.price !== '' ? ' &middot; est. ' + money(j.price) : '')) + '</p>' +
           '<div class="btn-row">' +
           (j.status === 'Sent' ? '<a class="btn btn-call" href="' + esc(link) + '">Customer signs here</a><button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button>' : '') +
-          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-price="' + esc(j.price) + '" data-idcheck="' + esc(j.id_check) + '">Finish &amp; invoice</button>' : '') +
-          (j.status === 'Invoiced' || j.status === 'Paid' ? '<a class="btn btn-ghost" href="' + esc(link) + '">View invoice</a>' : '') +
+          (j.status === 'Signed' ? '<button class="btn btn-call" data-finish="' + esc(j.id) + '" data-token="' + esc(j.token) + '" data-phone="' + esc(j.phone || '') + '" data-price="' + esc(j.price) + '" data-idcheck="' + esc(j.id_check) + '">&#9989; Job done &rarr; invoice</button>' : '') +
+          (j.status === 'Invoiced' || j.status === 'Paid' ? '<a class="btn btn-ghost" href="' + esc(link) + '">View invoice</a><button class="btn btn-ghost" type="button" data-sendinv="' + esc(j.id) + '" data-token="' + esc(j.token) + '" data-phone="' + esc(j.phone || '') + '">Send invoice</button>' : '') +
           (j.folder_url ? '<a class="btn btn-ghost" href="' + esc(j.folder_url) + '" target="_blank" rel="noopener">Files</a>' : '') +
           '</div></div>';
       }).join('');
     }).catch(function (err) { box.innerHTML = '<p class="wo-msg bad">' + esc(err.message) + '</p>'; });
+  }
+
+  function shareRow(text, phone) {
+    var digits = (phone || '').replace(/\D/g, '');
+    if (digits.length === 10) digits = '1' + digits;
+    return (MOBILE ? '<a class="btn btn-ghost" href="sms:' + (digits ? '+' + digits : '') + (/iPhone|iPad/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text) + '">Send by text</a>'
+        : '<button class="btn btn-ghost" type="button" data-copy="' + esc(text) + '" data-note="Copied! Text messages open only on a phone. Paste this into a text or email.">Copy text message</button>') +
+      '<a class="btn btn-wa" href="https://wa.me/' + digits + '?text=' + encodeURIComponent(text) + '" rel="noopener">WhatsApp</a>';
+  }
+
+  function invoiceCard(id, token, phone, status) {
+    var link = customerLink(id, token);
+    var text = 'Lockman ASAP Locksmith: thank you! Your ' + (status === 'Paid' ? 'receipt' : 'invoice') + ' ' + id + ' is here: ' + link;
+    $('#wo-created').innerHTML = '<div class="card"><h3>' + (status === 'Paid' ? 'Receipt' : 'Invoice') + ' ' + esc(id) + ' is ready. Send it to the customer:</h3><div class="btn-row">' +
+      '<a class="btn btn-call" href="' + esc(link) + '">Show customer on my phone</a>' + shareRow(text, phone) +
+      '<button class="btn btn-ghost" data-copy="' + esc(link) + '">Copy link</button></div></div>';
+    $('#wo-created').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function sendButtons(id, token, phone) {
@@ -193,10 +210,13 @@
       });
       return;
     }
+    var si = ev.target.closest('[data-sendinv]');
+    if (si) { invoiceCard(si.dataset.sendinv, si.dataset.token, si.dataset.phone, 'Invoiced'); return; }
     var fin = ev.target.closest('[data-finish]');
     if (fin) {
       var f = $('#wo-finish-form');
       f.job.value = fin.dataset.finish; f.final_price.value = fin.dataset.price || '';
+      f.dataset.token = fin.dataset.token; f.dataset.phone = fin.dataset.phone;
       $('#wo-finish-id').textContent = fin.dataset.finish;
       var inPerson = fin.dataset.idcheck && fin.dataset.idcheck !== 'Photo uploaded';
       $('#wo-idv-row').hidden = !inPerson; f.id_verified.checked = false; f.id_verified.required = inPerson;
@@ -222,7 +242,7 @@
     msg($('#wo-finish-msg'), 'Creating invoice...');
     call({ action: 'finish', pin: store('wo-pin'), id: f.job.value, final_price: f.final_price.value, payment_method: f.method.value,
       paid: f.paid.checked, id_verified: f.id_verified.checked, payments: PAY })
-      .then(function () { show('owner'); refresh(); })
+      .then(function (r) { show('owner'); refresh(); invoiceCard(f.job.value, f.dataset.token, f.dataset.phone, r.status); })
       .catch(function (err) { msg($('#wo-finish-msg'), err.message, true); })
       .then(function () { b.disabled = false; });
   };

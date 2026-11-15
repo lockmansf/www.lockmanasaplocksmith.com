@@ -242,7 +242,7 @@ function listJobs() {
     var o = {};
     COLUMNS.forEach(function (c, i) { o[c] = v[i]; });
     return { id: o.id, token: o.token, status: o.status, created: String(o.created), job_type: o.job_type, price: o.price,
-      customer_name: o.customer_name, address: o.address, final_price: o.final_price, folder_url: o.folder_url,
+      customer_name: o.customer_name, phone: String(o.phone || ""), address: o.address, final_price: o.final_price, folder_url: o.folder_url,
       id_check: o.id_check };
   }).reverse();
   return { ok: true, jobs: jobs };
