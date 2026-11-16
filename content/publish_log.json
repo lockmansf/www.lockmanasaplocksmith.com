@@ -131,8 +131,8 @@
     },
     "2026-11-16": {
       "target_hour": 15,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "locked-out-of-your-sf-business-before-opening-time",
       "failures": []
     }
   },
@@ -146,6 +146,7 @@
     "Signs your front door lock needs repair before it fails",
     "Rekeying vs replacing locks: which makes sense after you move in",
     "What a licensed California locksmith must show you (and why it protects you)",
-    "How to spot a locksmith scam before you let someone near your door"
+    "How to spot a locksmith scam before you let someone near your door",
+    "Locked out of your business: steps to take before opening time"
   ]
 }
