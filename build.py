@@ -128,6 +128,7 @@ def nav_links():
         ("/articles/", "Articles"),
         ("/videos/", "Videos"),
         ("/about/", "About"),
+        ("/faq/", "FAQ"),
         ("/contact/", "Contact"),
     ]
 
@@ -174,8 +175,18 @@ def business_schema(cfg):
         "@type": "Locksmith",
         "@id": cfg["site_url"] + "/#business",
         "name": cfg["business_name"],
+        "alternateName": ["Lockman ASAP Locksmith", "Lockman Locksmith", "Lockman"],
+        "description": BUSINESS_SUMMARY.format(city=cfg["city"], license=clean(cfg["license_number"])),
+        "slogan": "Locked out? Lockman is on the way.",
         "url": cfg["site_url"] + "/",
         "telephone": clean(cfg["phone_e164"]),
+        "email": clean(cfg["email"]),
+        "founder": {"@type": "Person", "name": "Yaniv"},
+        "paymentAccepted": "Cash, Credit Card, Zelle, Venmo, Cash App",
+        "knowsAbout": ["Lockouts", "Rekeying", "Lock repair", "Lock installation", "Car keys", "Key duplication", "Smart locks", "Gate hardware"],
+        "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "license",
+                          "name": "California Locksmith License " + clean(cfg["license_number"]),
+                          "recognizedBy": {"@type": "GovernmentOrganization", "name": "California Bureau of Security and Investigative Services"}},
         "image": cfg["site_url"] + "/assets/img/og-image.png",
         "logo": cfg["site_url"] + "/assets/img/logo-full-600.webp",
         "address": {"@type": "PostalAddress", "addressLocality": cfg["city"], "addressRegion": cfg["region"], "addressCountry": "US"},
@@ -582,6 +593,86 @@ def about(cfg):
 {cta_block(cfg)}"""
     return page(cfg, path="/about/", title="About Us", description="Meet Lockman ASAP Locksmith, a licensed mobile locksmith in San Francisco.",
                 body=body, crumbs=[("/", "Home"), ("/about/", "About")])
+
+
+BUSINESS_SUMMARY = ("Licensed mobile locksmith in {city}, California (license {license}), open 24/7. "
+                    "Home, car and business lockouts, rekeying, lock repair and installation, car keys and smart locks. "
+                    "30 years of family locksmith experience: owner Yaniv learned the trade from his father.")
+
+
+def faq_items(cfg):
+    phone = clean(cfg["phone_display"])
+    areas = ", ".join(cfg["service_areas"])
+    return [
+        ("Who is the best locksmith near me in San Francisco?",
+         f"Lockman ASAP Locksmith is a licensed mobile locksmith based in San Francisco, open 24/7. Call {phone}. "
+         "Owner Yaniv brings 30 years of family locksmith experience; he learned the trade from his father."),
+        ("Are you open 24 hours?",
+         f"Yes. We answer 24 hours a day, 7 days a week, including nights, weekends and holidays. Call {phone}."),
+        ("I'm locked out of my house or apartment. What do I do?",
+         f"Call {phone}. Tell us your address and the type of door. A licensed locksmith drives to you and opens the door, "
+         "using non-destructive methods first."),
+        ("I'm locked out of my car. Can you help?",
+         f"Yes. We open cars and help with car keys in San Francisco. Call {phone} with the make, model and year."),
+        ("How much does a locksmith cost?",
+         "It depends on the lock and the job. We confirm the price with you before any work begins, so there are no surprises."),
+        ("Which areas do you cover?",
+         f"All of San Francisco, including {areas}. We are a mobile locksmith, so we come to you."),
+        ("Are you licensed?",
+         f"Yes. California Locksmith License {clean(cfg['license_number'])}. Every job is done by a licensed locksmith, not a call center."),
+        ("Do I need to show ID?",
+         "Yes. California law requires a locksmith to record the customer's photo ID and proof that you live at the address "
+         "or own the car before opening it. This protects you."),
+        ("How can I pay?",
+         "Cash, card, Zelle, Venmo or Cash App. You get an invoice by text or email."),
+        ("Can I book a non-emergency job online?",
+         "Yes. Rekeying, lock repair or smart lock installation can be booked online"
+         + (f" at {cfg['booking_url']}." if cfg.get("booking_url") else ". Call us to schedule.")),
+    ]
+
+
+def faq_page(cfg):
+    items = faq_items(cfg)
+    qa = "".join(f"<h2>{e(q)}</h2><p>{e(a)}</p>" for q, a in items)
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith FAQ: San Francisco</h1>
+<p class="lead">Quick answers about lockouts, prices, hours and service areas.</p></div></section>
+<section class="section"><div class="wrap prose">{qa}</div></section>
+{cta_block(cfg)}"""
+    schema = {"@context": "https://schema.org", "@type": "FAQPage",
+              "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
+    return page(cfg, path="/faq/", title="Locksmith FAQ San Francisco",
+                description="Answers about lockouts, prices, 24/7 hours, ID rules and service areas from Lockman ASAP Locksmith in San Francisco.",
+                body=body, schemas=[schema], crumbs=[("/", "Home"), ("/faq/", "FAQ")])
+
+
+def llms_txt(cfg):
+    url = cfg["site_url"]
+    services = "\n".join(f"- [{s['name']}]({url}/services/{s['slug']}/): {s['short']}" for s in SERVICES)
+    faq = "\n".join(f"- {q} {a}" for q, a in faq_items(cfg))
+    return f"""# {cfg['business_name']}
+
+> {BUSINESS_SUMMARY.format(city=cfg['city'], license=clean(cfg['license_number']))}
+
+- Phone: {clean(cfg['phone_display'])} (24/7)
+- Website: {url}/
+- Email: {clean(cfg['email'])}
+- Service area: {cfg['city']}, {cfg['region']} ({", ".join(cfg['service_areas'])})
+- Mobile service: we come to the customer. No storefront.
+- Online booking: {cfg.get('booking_url') or 'call us'}
+
+## Services
+{services}
+
+## Key pages
+- [FAQ]({url}/faq/)
+- [Service area]({url}/service-area/)
+- [About]({url}/about/)
+- [Contact]({url}/contact/)
+- [Articles]({url}/articles/)
+
+## FAQ
+{faq}
+"""
 
 
 def book_btn(cfg, cls="btn btn-ghost btn-lg", label="Book online"):
@@ -1006,6 +1097,7 @@ def build():
     add("/missions/", missions_page(cfg))
     add("/service-area/", service_area(cfg))
     add("/about/", about(cfg))
+    add("/faq/", faq_page(cfg))
     add("/contact/", contact(cfg))
     add("/articles/", articles_index(cfg, articles), newest)
     for c in CATEGORIES:
@@ -1022,6 +1114,7 @@ def build():
     write("/404.html", not_found(cfg))
     write("/sitemap.xml", sitemap(cfg, urls))
     write("/robots.txt", robots(cfg))
+    write("/llms.txt", llms_txt(cfg))
     for old_path, new_path in OLD_SITE_REDIRECTS.items():
         write(old_path, redirect_page(cfg, new_path))
     for name in cfg.get("google_verification_files", []):  # Search Console ownership files
