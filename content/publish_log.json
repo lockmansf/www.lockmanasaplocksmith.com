@@ -134,6 +134,12 @@
       "attempts": 1,
       "published": "locked-out-of-your-sf-business-before-opening-time",
       "failures": []
+    },
+    "2026-11-19": {
+      "target_hour": 9,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
