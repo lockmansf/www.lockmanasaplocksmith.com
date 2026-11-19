@@ -137,8 +137,8 @@
     },
     "2026-11-19": {
       "target_hour": 9,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "what-to-do-when-a-key-breaks-off-inside-your-lock",
       "failures": []
     }
   },
@@ -153,6 +153,7 @@
     "Rekeying vs replacing locks: which makes sense after you move in",
     "What a licensed California locksmith must show you (and why it protects you)",
     "How to spot a locksmith scam before you let someone near your door",
-    "Locked out of your business: steps to take before opening time"
+    "Locked out of your business: steps to take before opening time",
+    "What to do with a broken key piece stuck in your lock"
   ]
 }
