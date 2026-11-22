@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from publisher.common import CATEGORIES, category_of, category_by_slug  # noqa: E402
 
-EXPERIENCE = "30 years of family locksmith experience: the owner learned the trade from his father, a locksmith."
+EXPERIENCE = "Third-generation locksmith with 30 years of experience: the owner learned the trade in his family and worked for years as a subcontractor for other locksmith companies before opening his own business."
 DIST = ROOT / "dist"
 ARTICLES_DIR = ROOT / "content" / "articles"
 
@@ -578,11 +578,12 @@ def about(cfg):
 <div>
 <h2 class="comic">Who we are</h2>
 <p>Lockman ASAP Locksmith is owned and run by Yaniv, a licensed California locksmith. Every job is handled by a licensed locksmith, not a call center.</p>
-<p>Lockman is backed by 30 years of family locksmith experience. Yaniv learned the trade from his father, a locksmith, and brings that hands-on knowledge to every door, lock and car key.</p>
+<p>Yaniv is a third-generation locksmith with 30 years of hands-on experience, a trade passed down in his family. For years he worked as a subcontractor for other locksmith companies, doing the real work behind their names.</p>
+<p>A few years ago he opened Lockman ASAP Locksmith to serve customers directly, under his own name: the same skill, honest upfront prices, and no middleman.</p>
 <p>The comic art on this site is original artwork created for Lockman. The hero stands for what we want every customer to feel when we arrive: help is here.</p>
 <h2 class="comic">Our promise</h2>
 <ul class="points">
-<li><h3>30 years of family experience</h3><p>A trade passed down from father to son.</p></li>
+<li><h3>Third generation, 30 years</h3><p>A family trade, passed down for three generations.</p></li>
 <li><h3>Licensed</h3><p>California Locksmith License {e(clean(cfg['license_number']))}.</p></li>
 <li><h3>Honest pricing</h3><p>The price is confirmed before work begins.</p></li>
 <li><h3>Careful work</h3><p>Non-destructive methods first, always.</p></li>
@@ -597,7 +598,7 @@ def about(cfg):
 
 BUSINESS_SUMMARY = ("Licensed mobile locksmith in {city}, California (license {license}), open 24/7. "
                     "Home, car and business lockouts, rekeying, lock repair and installation, car keys and smart locks. "
-                    "30 years of family locksmith experience: owner Yaniv learned the trade from his father.")
+                    "Third-generation locksmith with 30 years of experience; owner Yaniv worked for years as a subcontractor for other locksmith companies and now serves customers directly.")
 
 
 def faq_items(cfg):
@@ -606,7 +607,7 @@ def faq_items(cfg):
     return [
         ("Who is the best locksmith near me in San Francisco?",
          f"Lockman ASAP Locksmith is a licensed mobile locksmith based in San Francisco, open 24/7. Call {phone}. "
-         "Owner Yaniv brings 30 years of family locksmith experience; he learned the trade from his father."),
+         "Owner Yaniv is a third-generation locksmith with 30 years of experience. He worked for years as a subcontractor for other locksmith companies and now serves customers directly, with no middleman."),
         ("Are you open 24 hours?",
          f"Yes. We answer 24 hours a day, 7 days a week, including nights, weekends and holidays. Call {phone}."),
         ("I'm locked out of my house or apartment. What do I do?",
