@@ -816,6 +816,7 @@ def load_videos():
         return []
     items = json.loads(VIDEOS_FILE.read_text(encoding="utf-8"))
     items = [v for v in items if (ROOT / "assets" / "videos" / f"{v['slug']}.mp4").exists()]
+    items = [v for v in items if not v.get("draft")]  # drafts wait for the owner's approval
     return sorted(items, key=lambda v: v["published_at"], reverse=True)
 
 

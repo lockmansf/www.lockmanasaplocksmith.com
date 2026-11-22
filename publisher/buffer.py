@@ -2,7 +2,7 @@
 
 Reads content/videos.json. A video is posted once to every connected Buffer
 channel; the result is saved on the video as "buffer": {channel: post id or error}.
-Skipped: videos with "buffer": "hold", and videos published before START
+Skipped: drafts ("draft": true, waiting for approval), videos with "buffer": "hold", and videos published before START
 (the old samples) unless they are given "buffer": {} to release them.
 The video file must already be live on the site, so this runs after deploy.
 
@@ -129,6 +129,8 @@ def post(video, channel, video_url, dry_run=False):
 
 def due(video):
     state = video.get("buffer")
+    if video.get("draft"):
+        return False  # waits for the owner's approval
     if state == "hold":
         return False
     if state is None and video.get("published_at", "") < START:
