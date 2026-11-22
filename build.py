@@ -613,10 +613,28 @@ def faq_items(cfg):
         ("I'm locked out of my house or apartment. What do I do?",
          f"Call {phone}. Tell us your address and the type of door. A licensed locksmith drives to you and opens the door, "
          "using non-destructive methods first."),
+        ("How fast can you get to me?",
+         "When we are free, usually within 15 to 20 minutes. If we are finishing another job, we come right after it. "
+         f"On average it takes about 20 to 25 minutes, sometimes less, depending on traffic and the time of day. Call {phone} and we leave right away."),
         ("I'm locked out of my car. Can you help?",
-         f"Yes. We open cars and help with car keys in San Francisco. Call {phone} with the make, model and year."),
+         f"Yes. We open cars in San Francisco. Call {phone} with the make, model and year."),
+        ("Can you make a new car key or key fob?",
+         "Yes. Car keys and key fobs are made by our car key technician, by appointment. Send us your car details "
+         f"(make, model, year and VIN). We verify your photo ID and that the car is yours, then schedule the job. Call {phone} to start."),
+        ("What does rekeying a lock cost?",
+         "A standard rekey starts at $45 and includes the labor. The final price depends on the type of key, the cylinder and the condition of the lock. "
+         "If there is no working key, the lock may have to be opened first, which can add to the price. We confirm the price with you before we start."),
+        ("Can you change a lock cylinder?",
+         "Yes. We rekey or replace cylinders on house, apartment and business doors, so old keys stop working and you get new keys."),
+        ("Do you install smart locks?",
+         "Yes. We install smart locks almost every day, all types: keypad, Wi-Fi, Bluetooth and fingerprint locks. We can also replace an old lock with a smart lock."),
+        ("Do you open or service safes?",
+         f"Yes. Call {phone} with the type of safe and what happened, and we will explain the options and the price before any work."),
+        ("Do you install access control and intercoms?",
+         "Yes. We install standalone access control systems (keypads, card and fob readers) and intercom systems. "
+         "For large buildings with many readers, we work with a trusted local access control company."),
         ("How much does a locksmith cost?",
-         "It depends on the lock and the job. We confirm the price with you before any work begins, so there are no surprises."),
+         "It depends on the lock and the job. For example, a standard rekey starts at $45. We confirm the price with you before any work begins, so there are no surprises."),
         ("Which areas do you cover?",
          f"All of San Francisco, including {areas}. We are a mobile locksmith, so we come to you."),
         ("Are you licensed?",
@@ -636,13 +654,13 @@ def faq_page(cfg):
     items = faq_items(cfg)
     qa = "".join(f"<h2>{e(q)}</h2><p>{e(a)}</p>" for q, a in items)
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith FAQ: San Francisco</h1>
-<p class="lead">Quick answers about lockouts, prices, hours and service areas.</p></div></section>
+<p class="lead">Quick answers about lockouts, rekeying, car keys, smart locks, prices and service areas.</p></div></section>
 <section class="section"><div class="wrap prose">{qa}</div></section>
 {cta_block(cfg)}"""
     schema = {"@context": "https://schema.org", "@type": "FAQPage",
               "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
     return page(cfg, path="/faq/", title="Locksmith FAQ San Francisco",
-                description="Answers about lockouts, prices, hours, ID rules and service areas from Lockman ASAP Locksmith in San Francisco.",
+                description="Answers about lockouts, rekey prices, car keys, smart locks, safes, access control and arrival times from Lockman ASAP Locksmith in San Francisco.",
                 body=body, schemas=[schema], crumbs=[("/", "Home"), ("/faq/", "FAQ")])
 
 
