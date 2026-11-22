@@ -1,0 +1,53 @@
+name: Narrate videos (Lockman voice)
+
+on:
+  push:
+    branches: [main]
+    paths: ["content/videos.json"]
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options: [check, narrate]
+        default: check
+
+permissions:
+  contents: write
+
+concurrency:
+  group: narrate
+  cancel-in-progress: false
+
+jobs:
+  narrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Check the ElevenLabs key
+        if: github.event_name == 'workflow_dispatch' && inputs.task == 'check'
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python3 -m publisher.narrate --check
+
+      - name: Add the voice-over to new videos
+        if: github.event_name == 'push' || inputs.task == 'narrate'
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          python3 -m publisher.narrate
+          git config user.name "lockman-bot"
+          git config user.email "lockman-bot@users.noreply.github.com"
+          git add content/videos.json assets/videos
+          if ! git diff --cached --quiet; then
+            git commit -m "Videos: add Lockman voice-over"
+            git pull --rebase && git push
+          fi
