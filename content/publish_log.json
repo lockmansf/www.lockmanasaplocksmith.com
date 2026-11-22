@@ -140,6 +140,12 @@
       "attempts": 1,
       "published": "what-to-do-when-a-key-breaks-off-inside-your-lock",
       "failures": []
+    },
+    "2026-11-22": {
+      "target_hour": 19,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
