@@ -515,7 +515,7 @@ def home(cfg, articles):
 {latest_section}
 {cta_block(cfg)}"""
     return page(cfg, path="/", title=f"{cfg['business_name']} | Emergency San Francisco Locksmith: Home & Car Lockouts",
-                description=f"Licensed emergency mobile locksmith in San Francisco, open 24 hours Sunday to Thursday. Home and car lockouts, broken key extraction and lock repair. Call {clean(cfg['phone_display'])} or WhatsApp us.",
+                description=f"Licensed emergency mobile locksmith in San Francisco, day and night. Home and car lockouts, broken key extraction and lock repair. Call {clean(cfg['phone_display'])} or WhatsApp us.",
                 body=body)
 
 
@@ -596,7 +596,7 @@ def about(cfg):
                 body=body, crumbs=[("/", "Home"), ("/about/", "About")])
 
 
-BUSINESS_SUMMARY = ("Licensed mobile locksmith in {city}, California (license {license}), open 24 hours Sunday to Thursday, Friday until 2 PM and Saturday from 6 PM. "
+BUSINESS_SUMMARY = ("Licensed mobile locksmith in {city}, California (license {license}), working day and night. "
                     "Home, car and business lockouts, rekeying, lock repair and installation, car keys and smart locks. "
                     "Third-generation locksmith with 30 years of experience; owner Yaniv worked for years as a subcontractor for other locksmith companies and now serves customers directly.")
 
@@ -606,10 +606,10 @@ def faq_items(cfg):
     areas = ", ".join(cfg["service_areas"])
     return [
         ("Who is the best locksmith near me in San Francisco?",
-         f"Lockman ASAP Locksmith is a licensed mobile locksmith based in San Francisco, open 24 hours Sunday to Thursday. Call {phone}. "
+         f"Lockman ASAP Locksmith is a licensed mobile locksmith based in San Francisco, working day and night. Call {phone}. "
          "Owner Yaniv is a third-generation locksmith with 30 years of experience. He worked for years as a subcontractor for other locksmith companies and now serves customers directly, with no middleman."),
         ("What are your hours?",
-         f"We are open 24 hours a day Sunday to Thursday, including nights. On Friday we work until 2 PM, and we are back on Saturday from 6 PM (in summer: Friday until 4 PM, Saturday from 9 PM). Call {phone}."),
+         f"We work day and night, including late nights. Hours are shorter on Friday afternoon and Saturday, so call {phone} to check availability."),
         ("I'm locked out of my house or apartment. What do I do?",
          f"Call {phone}. Tell us your address and the type of door. A licensed locksmith drives to you and opens the door, "
          "using non-destructive methods first."),
@@ -654,7 +654,7 @@ def llms_txt(cfg):
 
 > {BUSINESS_SUMMARY.format(city=cfg['city'], license=clean(cfg['license_number']))}
 
-- Phone: {clean(cfg['phone_display'])} (24 hours Sun–Thu, Fri until 2 PM, Sat from 6 PM)
+- Phone: {clean(cfg['phone_display'])} (day and night, call to check availability)
 - Website: {url}/
 - Email: {clean(cfg['email'])}
 - Service area: {cfg['city']}, {cfg['region']} ({", ".join(cfg['service_areas'])})

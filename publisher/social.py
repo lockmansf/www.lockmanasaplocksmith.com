@@ -25,7 +25,7 @@ from publisher import common, gemini
 
 LOG_FILE = common.ROOT / "content" / "social_log.json"
 
-CAPTION_PROMPT = """Write social media captions for Lockman ASAP Locksmith, a licensed emergency mobile locksmith in San Francisco (open 24 hours Sunday to Thursday; Friday until 2 PM; Saturday from 6 PM). Never say 24/7.
+CAPTION_PROMPT = """Write social media captions for Lockman ASAP Locksmith, a licensed emergency mobile locksmith in San Francisco working day and night. Never say 24/7 and never mention closed hours.
 They promote this new article on the website:
 
 Title: {title}

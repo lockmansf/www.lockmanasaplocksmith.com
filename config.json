@@ -12,7 +12,7 @@
   "license_number": "LCO 8611",
   "city": "San Francisco",
   "region": "CA",
-  "hours_text": "Open 24 hours Sun–Thu · Fri until 2 PM · Sat from 6 PM",
+  "hours_text": "Day & night · Call to check availability",
   "opening_hours_schema": [
     {
       "@type": "OpeningHoursSpecification",
