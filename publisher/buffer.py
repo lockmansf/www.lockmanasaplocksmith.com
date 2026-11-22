@@ -83,7 +83,7 @@ def caption(video, service):
     title = video["title"]
     desc = video.get("description", "")
     if service == "youtube":
-        return (f"{desc}\n\nLockman ASAP Locksmith: 24/7 mobile locksmith in San Francisco. "
+        return (f"{desc}\n\nLockman ASAP Locksmith: emergency mobile locksmith in San Francisco. "
                 f"30 years of experience, a family trade.\nCall {PHONE}\n"
                 "https://lockmanasaplocksmith.com\n\n" + TAGS)
     return f"{title}\n\n{desc}\n\nLocked out? Call Lockman: {PHONE}\n\n{TAGS}"

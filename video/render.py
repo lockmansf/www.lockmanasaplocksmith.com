@@ -466,7 +466,7 @@ def frame(t):
     d.rounded_rectangle((W / 2 - 330, 270, W / 2 + 330, 850), radius=40, fill=(255, 255, 255, int(235 * a)), outline=YELLOW, width=8)
     lg = logo.resize((int(560 * (0.8 + 0.2 * a)), int(513 * (0.8 + 0.2 * a))))
     img.alpha_composite(lg, (int(W / 2 - lg.size[0] / 2), 300))
-    rows = [("24/7 SAN FRANCISCO LOCKSMITH", F[54], YELLOW, 22.3), ("Home  •  Car  •  Business Lockouts", F[46], WHITE, 22.7),
+    rows = [("SAN FRANCISCO LOCKSMITH", F[54], YELLOW, 22.3), ("Home  •  Car  •  Business Lockouts", F[46], WHITE, 22.7),
             ("30 years of family experience", F[46], WHITE, 23.1), ("(415) 806-7343", F[92], YELLOW, 23.5), ("lockmanasaplocksmith.com", F[54], WHITE, 23.9)]
     y = 900
     for s_, f, c, at in rows:
