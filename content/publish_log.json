@@ -143,8 +143,8 @@
     },
     "2026-11-22": {
       "target_hour": 19,
-      "attempts": 0,
-      "published": null,
+      "attempts": 1,
+      "published": "caring-for-locks-on-sf-victorian-edwardian-doors",
       "failures": []
     }
   },
@@ -160,6 +160,7 @@
     "What a licensed California locksmith must show you (and why it protects you)",
     "How to spot a locksmith scam before you let someone near your door",
     "Locked out of your business: steps to take before opening time",
-    "What to do with a broken key piece stuck in your lock"
+    "What to do with a broken key piece stuck in your lock",
+    "Caring for locks on Victorian and Edwardian doors in San Francisco"
   ]
 }
