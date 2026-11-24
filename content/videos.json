@@ -15,7 +15,11 @@
     ],
     "narration": "This gate needed real security, so I got to work. First, I welded a new steel lock box right onto the frame. Sparks flying, hands steady. Then in goes a push-button keypad lock, with a solid latch lined up just right. Now no keys to lose, just your code and you're in. Your gate, locked tight. Lockman ASAP Locksmith. Call four one five, eight oh six, seven three four three.",
     "narrated": true,
-    "buffer": {}
+    "buffer": {
+      "6aeaf86de29c69a1715a5c7d": "6b059a5b6f38a5917eece995",
+      "6aeaf81fe29c69a1715a5984": "6b059a5dd53d07683a2280a0",
+      "6aeaf771e29c69a1715a52ad": "6b059a680f4c7107f73a26c7"
+    }
   },
   {
     "slug": "lockman-van-apartment-lockout",
