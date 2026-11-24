@@ -56,12 +56,11 @@ def duration(path):
 
 
 def mix(video, voice, out):
-    """Voice starts after 1.5 s; music is ducked under the voice."""
+    """Voice starts after 1.5 s, loud and clear; the music plays softly under it."""
     filt = (
-        "[1:a]aformat=sample_rates=44100:channel_layouts=stereo,adelay=1500|1500,volume=1.6,apad,asplit=2[vox][key];"
-        "[0:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.9[mus];"
-        "[mus][key]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=400[duck];"
-        "[duck][vox]amix=inputs=2:duration=first:dropout_transition=0,volume=1.4[aout]"
+        "[1:a]aformat=sample_rates=44100:channel_layouts=stereo,adelay=1500|1500,loudnorm=I=-16:TP=-1.5:LRA=11,apad[vox];"
+        "[0:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.22[mus];"
+        "[mus][vox]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[aout]"
     )
     subprocess.run(
         ["ffmpeg", "-y", "-loglevel", "error", "-i", str(video), "-i", str(voice),
