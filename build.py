@@ -115,6 +115,84 @@ SERVICES = [
             ("Clear price before we start", "We look at the door, recommend the hardware and confirm the price before any work begins."),
         ],
     },
+    {
+        "slug": "rekey-lock-change",
+        "name": "Rekey & Lock Change",
+        "short": "Rekey or change your locks so old keys stop working. Standard rekey from $45.",
+        "title": "Rekey & Lock Change Service in San Francisco",
+        "intro": "Moved in, lost a key, or had a tenant or employee leave? Rekeying changes the inside of the lock so the old keys stop working, without replacing the whole lock. If the lock is worn out, we replace it.",
+        "points": [
+            ("Standard rekey from $45", "A standard rekey starts at $45 including labor. The final price depends on the key type, the cylinder and the condition of the lock."),
+            ("One key for every door", "We can rekey your front door, back door, garage and gate to work with one key."),
+            ("Cylinder replacement", "Worn, damaged or high-security cylinders can be replaced so the lock works smoothly again."),
+            ("No key? No problem", "If there is no working key, we open the lock first and then rekey it. We confirm the price before we start."),
+        ],
+    },
+    {
+        "slug": "car-keys",
+        "name": "Car Keys & Key Fobs",
+        "short": "New car keys and key fobs, made by our car key technician by appointment.",
+        "title": "Car Key & Key Fob Replacement in San Francisco",
+        "intro": "Lost your only car key or need a spare key fob? Our car key technician makes and programs keys by appointment. Send us your make, model, year and VIN to get started.",
+        "points": [
+            ("By appointment", "Car keys and fobs are made by appointment, so the technician comes ready with the right blank and programming tools."),
+            ("Owner verification", "For your security we verify your photo ID and that the car is yours before any key is made."),
+            ("Keys and fobs", "Standard keys, transponder keys and remote key fobs for many makes and models."),
+            ("Car lockouts too", "Keys locked inside? That's a separate fast service: see our car lockout page."),
+        ],
+    },
+    {
+        "slug": "access-control-intercom",
+        "name": "Access Control & Intercoms",
+        "short": "Standalone access control, keypad and fob readers, and intercom installation.",
+        "title": "Access Control & Intercom Installation in San Francisco",
+        "intro": "Control who comes in without handing out keys. We install standalone access control systems, keypad and card or fob readers, and intercoms for homes, offices and small buildings.",
+        "points": [
+            ("Standalone systems", "Keypad and card or fob readers that work on their own, without an expensive network system."),
+            ("Intercoms", "Intercom installation and replacement for gates, front doors and small buildings."),
+            ("Large buildings", "For large buildings with many readers, we work with a trusted local access control company."),
+            ("Clear price before we start", "We look at the door and the wiring and confirm the price before any work begins."),
+        ],
+    },
+    {
+        "slug": "safes",
+        "name": "Safe Service",
+        "short": "Safe opening and safe lock service in San Francisco.",
+        "title": "Safe Locksmith in San Francisco",
+        "intro": "Locked out of your safe or the lock stopped working? Call us with the type of safe and what happened, and we explain the options and the price before any work.",
+        "points": [
+            ("Safe opening", "Forgotten combination, dead keypad or a broken key: we look for the least damaging way in."),
+            ("Lock service", "Keypad and dial lock repair or replacement."),
+            ("Proof of ownership", "We verify that the safe is yours before we open it."),
+            ("Price first", "We confirm the price with you before we start."),
+        ],
+    },
+    {
+        "slug": "commercial-locksmith",
+        "name": "Commercial Locksmith",
+        "short": "Locks, rekeys, master keys and keypad entry for offices, shops and restaurants.",
+        "title": "Commercial Locksmith for San Francisco Businesses",
+        "intro": "Shops, restaurants and offices need locks that hold up to heavy daily use. We repair and replace commercial locks, rekey after staff changes and set up master keys and keypad entry.",
+        "points": [
+            ("Rekey after staff changes", "When an employee leaves, rekey so their key stops working."),
+            ("Master keys", "Each person gets a key that opens only the doors they need."),
+            ("Keypad and mortise locks", "Commercial keypad mortise locks, deadbolts and storefront door locks."),
+            ("Gates and back doors", "Gate locks, lock boxes and back-door security for alleys and loading areas."),
+        ],
+    },
+    {
+        "slug": "emergency-locksmith",
+        "name": "Emergency Locksmith",
+        "short": "Locked out right now? Fast mobile locksmith help in San Francisco, day and night.",
+        "title": "Emergency Locksmith in San Francisco",
+        "intro": "Locked out of your home, car or business right now? Call us. When we are free we usually arrive in 15 to 20 minutes; if we are finishing a job we come right after it. On average it takes 20 to 25 minutes, depending on traffic.",
+        "points": [
+            ("Mobile service", "We come to you anywhere in San Francisco, Daly City and South San Francisco."),
+            ("Non-destructive entry first", "We use picking and bypass tools first, so in most cases your lock keeps working."),
+            ("ID check", "For your safety we verify that you live or work at the address, or own the car."),
+            ("Price first", "We give you the price on the phone and confirm it on site before any work."),
+        ],
+    },
 ]
 
 
@@ -559,16 +637,53 @@ def service_page(cfg, s):
                 body=body, schemas=[schema], crumbs=[("/", "Home"), ("/services/", "Services"), (f"/services/{s['slug']}/", s["name"])])
 
 
-def service_area(cfg):
-    items = "".join(f"<li>{e(a)}</li>" for a in cfg["service_areas"])
+def load_areas():
+    return json.loads((ROOT / "content" / "areas.json").read_text(encoding="utf-8"))
+
+
+def service_area(cfg, areas):
+    items = "".join(f'<li><a href="/service-area/{a["slug"]}/">Locksmith in {e(a["name"])}</a></li>' for a in areas)
     body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith Service Area: San Francisco</h1>
-<p class="lead">We are a mobile locksmith. We come to your home, business or wherever you are locked out in {e(cfg['city'])}.</p></div></section>
+<p class="lead">We are a mobile locksmith. We come to your home, business or wherever you are locked out in {e(cfg['city'])}, Daly City and South San Francisco.</p></div></section>
 <section class="section"><div class="wrap"><h2 class="comic">Neighborhoods we serve</h2><ul class="area-list">{items}</ul>
 <p>Don't see your neighborhood? Call us. If you're in San Francisco, we come to you.</p></div></section>
 {cta_block(cfg)}"""
     return page(cfg, path="/service-area/", title="Locksmith Service Area in San Francisco",
-                description="Mobile locksmith covering every San Francisco neighborhood, from the Mission and SoMa to the Sunset and Richmond.",
+                description="Mobile locksmith covering every San Francisco neighborhood, from the Mission and SoMa to the Sunset and Richmond, plus Daly City and South San Francisco.",
                 body=body, crumbs=[("/", "Home"), ("/service-area/", "Service Area")])
+
+
+def area_page(cfg, a, areas):
+    by_slug = {x["slug"]: x for x in areas}
+    local = "".join(f"<li>{e(t)}</li>" for t in a["local"])
+    services = "".join(f'<li><a href="/services/{s["slug"]}/">{e(s["name"])} in {e(a["name"])}</a></li>' for s in SERVICES)
+    nearby = "".join(f'<li><a href="/service-area/{n}/">Locksmith in {e(by_slug[n]["name"])}</a></li>' for n in a["nearby"] if n in by_slug)
+    place = a["name"] if a["slug"] in ("daly-city", "south-san-francisco") else f"{a['name']}, San Francisco"
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": f"Locksmith in {a['name']}",
+        "serviceType": "Locksmith",
+        "provider": {"@id": cfg["site_url"] + "/#business"},
+        "areaServed": {"@type": "Place", "name": place + ", CA"},
+        "description": a["intro"],
+    }
+    body = f"""<section class="section page-head halftone"><div class="wrap"><h1 class="comic">Locksmith in {e(a['name'])}</h1>
+<p class="lead">{e(a['intro'])}</p>
+<div class="btn-row"><a class="btn btn-call btn-lg" href="{tel(cfg)}">Call {e(clean(cfg['phone_display']))}</a>
+<a class="btn btn-wa btn-lg" href="{whatsapp_url(cfg)}" rel="noopener">WhatsApp</a>
+{book_btn(cfg)}</div></div></section>
+<section class="section"><div class="wrap two-col">
+<div><h2 class="comic">Locksmith work in {e(a['name'])}</h2><ul class="points">{local}</ul>
+<p>Lockman ASAP Locksmith is a licensed mobile locksmith ({e(clean(cfg['license_number']))}). Owner Yaniv is a third-generation locksmith with 30 years in the trade. We confirm the price with you before any work begins.</p></div>
+<aside class="panel"><h2 class="comic">Services</h2><ul class="plain">{services}</ul>
+<h2 class="comic">Nearby</h2><ul class="plain">{nearby}</ul></aside>
+</div></section>
+{cta_block(cfg, heading=f"Locked out in {a['name']}?")}"""
+    return page(cfg, path=f"/service-area/{a['slug']}/", title=f"Locksmith in {a['name']} | Lockouts, Rekeys, Smart Locks",
+                description=f"Licensed mobile locksmith in {place}: lockouts, rekeys, lock changes, smart locks and car keys. Call {clean(cfg['phone_display'])}.",
+                body=body, schemas=[schema],
+                crumbs=[("/", "Home"), ("/service-area/", "Service Area"), (f"/service-area/{a['slug']}/", a["name"])])
 
 
 def about(cfg):
@@ -1115,7 +1230,10 @@ def build():
     for s in SERVICES:
         add(f"/services/{s['slug']}/", service_page(cfg, s))
     add("/missions/", missions_page(cfg))
-    add("/service-area/", service_area(cfg))
+    areas = load_areas()
+    add("/service-area/", service_area(cfg, areas))
+    for ar in areas:
+        add(f"/service-area/{ar['slug']}/", area_page(cfg, ar, areas))
     add("/about/", about(cfg))
     add("/faq/", faq_page(cfg))
     add("/contact/", contact(cfg))

@@ -1,0 +1,222 @@
+[
+  {
+    "slug": "mission-district",
+    "name": "Mission District",
+    "intro": "From Valencia Street flats to the busy shops on Mission and 24th, we help Mission District residents and businesses with lockouts, rekeys and new locks.",
+    "local": [
+      "Many Mission buildings are Victorian and Edwardian flats with old mortise locks and shared front doors. We repair and rekey these older locks instead of replacing the whole door hardware when we can.",
+      "Restaurants, bars and shops along Mission and Valencia often need a fast rekey after staff changes, or a new deadbolt on a back door. We handle storefront and back-door locks.",
+      "Lost your keys after a night out? We open the door first, then rekey on the spot so the old keys stop working."
+    ],
+    "nearby": ["castro", "noe-valley", "bernal-heights", "potrero-hill", "soma"]
+  },
+  {
+    "slug": "soma",
+    "name": "SoMa",
+    "intro": "SoMa is full of lofts, condos, offices and startups. We are based close by, so South of Market is one of the areas we cover most.",
+    "local": [
+      "Condo and loft buildings often use keypad entry, fob readers and high-security deadbolts. We install and service smart locks and standalone access control for units and small offices.",
+      "Offices and studios that change tenants or employees often need every lock rekeyed at once. We rekey and master-key small offices so each person has the right key.",
+      "Locked out of your car near the ballpark or a SoMa garage? Call with the make, model and where you are parked."
+    ],
+    "nearby": ["financial-district", "mission-district", "potrero-hill", "dogpatch", "nob-hill"]
+  },
+  {
+    "slug": "nob-hill",
+    "name": "Nob Hill",
+    "intro": "Nob Hill apartment buildings, co-ops and hotels on steep streets: we come to you for lockouts, lock repairs and new locks.",
+    "local": [
+      "Many Nob Hill buildings are older apartment houses with lobby doors, mail rooms and unit doors on different keys. We repair worn locks and rekey unit doors.",
+      "Building managers can call us for lobby door hardware, closers and lock cylinders that wear out from heavy daily use.",
+      "Parked on a hill and locked the keys inside? Tell us the cross street so we can find you fast."
+    ],
+    "nearby": ["financial-district", "north-beach", "pacific-heights", "soma"]
+  },
+  {
+    "slug": "pacific-heights",
+    "name": "Pacific Heights",
+    "intro": "Pacific Heights homes often have quality doors and high-security locks. We work carefully to open, repair and upgrade them without damage.",
+    "local": [
+      "Single-family homes and large flats here often have multiple entry doors, garage doors and gates. We can rekey them all to one key.",
+      "We install smart locks that match the look of a classic front door, with keypad or app access for family, cleaners and dog walkers.",
+      "High-security cylinders need the right parts. Tell us the brand on the lock face when you call."
+    ],
+    "nearby": ["marina", "presidio-heights", "nob-hill"]
+  },
+  {
+    "slug": "marina",
+    "name": "Marina",
+    "intro": "Marina apartments, flats and the shops on Chestnut and Union: we help with lockouts, rekeys and lock changes.",
+    "local": [
+      "Moving into a new Marina apartment? Rekeying is a quick, affordable way to make sure the old tenant's keys no longer work.",
+      "Small businesses on Chestnut and Union Street call us for storefront locks, back-door deadbolts and keypad locks for staff.",
+      "Keys locked in the car near the waterfront? Call with the make and model and where you are parked."
+    ],
+    "nearby": ["pacific-heights", "presidio-heights", "north-beach"]
+  },
+  {
+    "slug": "richmond-district",
+    "name": "Richmond District",
+    "intro": "From Inner Richmond to the Outer Richmond near Ocean Beach, we come to homes, flats and shops for lockouts and lock work.",
+    "local": [
+      "Many Richmond homes are row houses with a garage door, a front door and a back door. We rekey them to one key so you carry less.",
+      "Shops and restaurants along Clement and Geary call us for lock repair, new deadbolts and keypad locks.",
+      "Fog and salty air from the ocean can make locks stiff. We clean, lubricate and repair sticky locks before they fail."
+    ],
+    "nearby": ["sunset-district", "presidio-heights", "haight-ashbury"]
+  },
+  {
+    "slug": "sunset-district",
+    "name": "Sunset District",
+    "intro": "Inner and Outer Sunset homes, flats and shops: we come to you for lockouts, rekeys, lock repair and smart locks.",
+    "local": [
+      "The Sunset is mostly single-family homes with garages. Locked out of the house through the garage? We open the door and can rekey or repair the lock right away.",
+      "Ocean air is hard on locks. If your key sticks or the lock is hard to turn, call before it breaks and leaves you locked out.",
+      "Shops on Irving, Judah and Noriega call us for storefront locks and keypad entry."
+    ],
+    "nearby": ["richmond-district", "haight-ashbury", "noe-valley"]
+  },
+  {
+    "slug": "noe-valley",
+    "name": "Noe Valley",
+    "intro": "Noe Valley homes, flats and the shops on 24th Street: lockouts, rekeys, new locks and smart locks.",
+    "local": [
+      "Families in Noe Valley often ask for smart locks so kids, sitters and cleaners can come in with a code instead of a key.",
+      "Older homes may have original locks that wear out. We repair them or replace them with a new deadbolt that fits the door.",
+      "Lost your keys? We open the door and rekey so the lost keys are useless."
+    ],
+    "nearby": ["castro", "mission-district", "bernal-heights", "sunset-district"]
+  },
+  {
+    "slug": "castro",
+    "name": "Castro",
+    "intro": "Castro apartments, Victorian flats and the businesses on Castro and Market: we help with lockouts and all lock work.",
+    "local": [
+      "Many Castro buildings are Victorian flats with shared front doors and older locks. We repair and rekey them.",
+      "Bars, cafes and shops call us for back-door locks, rekeys after staff changes and keypad locks.",
+      "Locked out late at night? Call us and we come to you."
+    ],
+    "nearby": ["noe-valley", "mission-district", "haight-ashbury"]
+  },
+  {
+    "slug": "haight-ashbury",
+    "name": "Haight-Ashbury",
+    "intro": "Haight-Ashbury and Cole Valley homes, flats and shops: lockouts, rekeys, lock repair and new locks.",
+    "local": [
+      "Historic Victorian buildings here often have old mortise locks. We repair them and find matching parts when possible.",
+      "Shops on Haight Street call us for storefront locks, security upgrades and keypad locks for staff.",
+      "Renting a room or a flat? Rekeying between tenants keeps everyone safe."
+    ],
+    "nearby": ["castro", "richmond-district", "sunset-district"]
+  },
+  {
+    "slug": "bernal-heights",
+    "name": "Bernal Heights",
+    "intro": "Bernal Heights homes and the shops on Cortland Avenue: we come to you for lockouts and lock work.",
+    "local": [
+      "Many Bernal homes have a front door, a garage and a back gate. We rekey them to one key or add a keypad lock to the gate.",
+      "Older doors can sag and make the lock hard to close. We adjust the strike and repair the lock so it latches properly.",
+      "Lost your keys? We open the door and rekey on the spot."
+    ],
+    "nearby": ["mission-district", "noe-valley", "excelsior", "bayview"]
+  },
+  {
+    "slug": "potrero-hill",
+    "name": "Potrero Hill",
+    "intro": "Potrero Hill homes, condos and small businesses: lockouts, rekeys, smart locks and access control.",
+    "local": [
+      "Newer condo buildings here often use fob readers and keypads. We install and service standalone access control and smart locks.",
+      "Studios and small offices call us to rekey or master-key all their doors.",
+      "Locked out of your car on a steep street? Call with the cross street."
+    ],
+    "nearby": ["dogpatch", "soma", "mission-district", "bayview"]
+  },
+  {
+    "slug": "dogpatch",
+    "name": "Dogpatch",
+    "intro": "Dogpatch lofts, condos, studios and warehouses: lockouts, lock changes, gate locks and access control.",
+    "local": [
+      "Warehouse and studio buildings often have heavy doors and gates. We install gate locks, keypad locks and door hardware built for heavy use.",
+      "New condo buildings use smart locks and fob readers. We install and service them.",
+      "Moving into a new unit? Rekey so only you have working keys."
+    ],
+    "nearby": ["potrero-hill", "soma", "bayview"]
+  },
+  {
+    "slug": "financial-district",
+    "name": "Financial District",
+    "intro": "Offices, retail stores and residential towers in the Financial District: commercial locks, rekeys, access control and lockouts.",
+    "local": [
+      "Offices call us to rekey after an employee leaves, to set up master keys, or to add a keypad lock to a server room or supply closet.",
+      "We install standalone access control and keypad locks for small offices. For large buildings with many readers, we work with a trusted local access control partner.",
+      "Locked out of your office? We verify you are allowed to enter, then open the door."
+    ],
+    "nearby": ["soma", "north-beach", "nob-hill"]
+  },
+  {
+    "slug": "north-beach",
+    "name": "North Beach",
+    "intro": "North Beach and Telegraph Hill apartments, restaurants and shops: lockouts, rekeys and lock repair.",
+    "local": [
+      "Restaurants and cafes on Columbus and Grant call us for back-door locks, rekeys after staff changes and keypad locks.",
+      "Older apartment buildings here have worn locks and shared doors. We repair and rekey them.",
+      "Locked out late after dinner? Call us and we come to you."
+    ],
+    "nearby": ["financial-district", "nob-hill", "marina"]
+  },
+  {
+    "slug": "excelsior",
+    "name": "Excelsior",
+    "intro": "Excelsior homes and the shops on Mission Street: lockouts, rekeys, new locks and security upgrades.",
+    "local": [
+      "Many homes here have security gates and garage doors. We install gate locks and rekey everything to one key.",
+      "Small businesses call us for storefront locks and deadbolt upgrades.",
+      "Lost your keys? We open the door and rekey so the old keys stop working."
+    ],
+    "nearby": ["bernal-heights", "bayview", "daly-city"]
+  },
+  {
+    "slug": "bayview",
+    "name": "Bayview",
+    "intro": "Bayview–Hunters Point homes, businesses and warehouses: lockouts, gate locks, rekeys and security upgrades.",
+    "local": [
+      "Businesses and warehouses here often need heavy-duty gate locks, padlocks and keypad locks. We weld and install lock boxes on gates when needed.",
+      "Homes with security gates and garages: we rekey them to one key or add a keypad lock.",
+      "Locked out of your car or truck? Call with the make, model and location."
+    ],
+    "nearby": ["dogpatch", "potrero-hill", "excelsior", "south-san-francisco"]
+  },
+  {
+    "slug": "presidio-heights",
+    "name": "Presidio Heights",
+    "intro": "Presidio Heights and Laurel Heights homes: careful lockouts, high-security locks, rekeys and smart locks.",
+    "local": [
+      "Large homes with several doors, garages and gates: we rekey everything to one key or set up a master key.",
+      "We install smart locks and keypad locks that keep the look of a classic front door.",
+      "High-security cylinders need the right parts. Tell us the brand on the lock face when you call."
+    ],
+    "nearby": ["pacific-heights", "marina", "richmond-district"]
+  },
+  {
+    "slug": "daly-city",
+    "name": "Daly City",
+    "intro": "Just south of San Francisco, we come to Daly City homes, apartments and businesses for lockouts and lock work.",
+    "local": [
+      "Many Daly City homes have a garage entry, a front door and a back door. We rekey them to one key.",
+      "Apartment buildings and shops call us for lock repair, rekeys between tenants and keypad locks.",
+      "Locked out of your car at a shopping center? Call with the make, model and where you are parked."
+    ],
+    "nearby": ["excelsior", "sunset-district", "south-san-francisco"]
+  },
+  {
+    "slug": "south-san-francisco",
+    "name": "South San Francisco",
+    "intro": "South San Francisco homes, offices, labs and warehouses: commercial locks, access control, rekeys and lockouts.",
+    "local": [
+      "Offices and labs call us for rekeys, master keys, keypad locks and standalone access control.",
+      "Warehouses and yards need heavy-duty gate locks and padlocks. We install them and can weld lock boxes onto gates.",
+      "Homes: lockouts, rekeys and new deadbolts."
+    ],
+    "nearby": ["daly-city", "bayview"]
+  }
+]
