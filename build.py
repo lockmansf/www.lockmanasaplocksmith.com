@@ -395,6 +395,8 @@ def page(cfg, *, path, title, description, body, schemas=(), crumbs=None, og_typ
       <p><a href="/terms/">Terms of Service</a></p>
       <p><a href="/accessibility/">Accessibility</a></p>
       <p><button type="button" class="link-btn" data-cookie-settings>Cookie settings</button></p>
+      {('<p><a href="/review/" rel="nofollow">Leave a review</a></p>') if cfg.get("google_review_url") else ""}
+      <p><a href="/work-order/" rel="nofollow">Owner login</a></p>
     </div>
   </div>
   <p class="wrap copyright">&copy; {year} {e(cfg['business_name'])}. All artwork is original and owned by {e(cfg['business_name'])}.</p>
@@ -1195,6 +1197,18 @@ def redirect_page(cfg, target):
 """
 
 
+def external_redirect(url):
+    """Short /review/ link that forwards to the Google review form."""
+    return f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Leave a review</title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="refresh" content="0; url={html.escape(url)}">
+</head><body><p><a href="{html.escape(url)}">Leave us a Google review</a></p>
+<script>location.replace({json.dumps(url)})</script></body></html>
+"""
+
+
 # ---------------------------------------------------------------- main
 
 def write(rel, content):
@@ -1249,6 +1263,8 @@ def build():
     add("/terms/", terms(cfg))
     add("/accessibility/", accessibility(cfg))
     write("/work-order/", work_order(cfg))  # owner tool + customer signing page, kept out of the sitemap
+    if cfg.get("google_review_url"):
+        write("/review/", external_redirect(cfg["google_review_url"]))  # short link, not in sitemap
     write("/404.html", not_found(cfg))
     write("/sitemap.xml", sitemap(cfg, urls))
     write("/robots.txt", robots(cfg))
