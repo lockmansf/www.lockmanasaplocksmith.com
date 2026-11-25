@@ -1,6 +1,11 @@
 """Turn the owner's own comic images into a vertical LOCKMAN video (1080x1920, 24 fps).
 
 Usage: python3 -m video.animate OUT.mp4 IMG1 [IMG2 ...] [--caption "TEXT" ...]
+       [--look comic|cinematic|documentary|before-after|macro|reel] [--background NAME]
+       [--music-mood epic|chill|acoustic|upbeat|trance] [--hook "LINE 1|LINE 2"] [--focus X,Y ...]
+       [--caption-style NAME] [--opener N]
+--look comic (default) is the original comic style below; every other look is a real-photo look
+rendered by video/looks.py at 1080x1920, 30 fps (see that module for backgrounds and caption styles).
 Each image gets ~4.5 s of camera motion (alternating push-in / pull-out). Dark (night) images get
 rain and warm light glows; bright images get drifting seagulls and a soft sparkle. The video opens
 with the LOCKMAN signal in the night sky and ends with the business card. Music: the site's
@@ -14,7 +19,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
-from video import music, render as R, theme
+from video import looks, moods, music, render as R, theme
 
 W, H, FPS = R.W, R.H, R.FPS
 INTRO, PER_IMAGE, OUTRO = 3.4, 4.6, 5.6
@@ -168,5 +173,18 @@ if __name__ == "__main__":
     ap.add_argument("out")
     ap.add_argument("images", nargs="+")
     ap.add_argument("--caption", action="append", default=[])
+    ap.add_argument("--look", default="comic", choices=("comic",) + looks.LOOKS)
+    ap.add_argument("--background", default="blurred-photo", choices=looks.BACKGROUNDS)
+    ap.add_argument("--music-mood", default=None, choices=moods.MOODS)
+    ap.add_argument("--caption-style", default=None, choices=looks.CAPTION_STYLES)
+    ap.add_argument("--hook", default=None, help='opening text, lines separated by "|"')
+    ap.add_argument("--focus", action="append", default=[], help="per image: X,Y of the detail to move toward (0..1)")
+    ap.add_argument("--opener", type=int, default=None, help="macro look: index of the image used for the opening close-up")
     a = ap.parse_args()
-    print(make(a.out, a.images, a.caption))
+    if a.look == "comic":
+        print(make(a.out, a.images, a.caption))
+    else:
+        focus = [tuple(float(v) for v in f.split(",")) for f in a.focus]
+        print(looks.make(a.out, a.images, a.caption, look=a.look, background_name=a.background,
+                         music_mood=a.music_mood or "chill", hook=a.hook, focus=focus,
+                         caption_style=a.caption_style, opener=a.opener))
