@@ -146,6 +146,12 @@
       "attempts": 1,
       "published": "caring-for-locks-on-sf-victorian-edwardian-doors",
       "failures": []
+    },
+    "2026-11-25": {
+      "target_hour": 15,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
