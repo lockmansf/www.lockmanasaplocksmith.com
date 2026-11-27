@@ -258,7 +258,12 @@ def draw_caption(img, text, style, x, t_shot=0.0):
         f = font("serif", 60)
         tw = d.textlength(text, font=f)
         y = 1560
-        d.text(((W - tw) / 2, y), text, font=f, fill=(255, 244, 226, int(255 * a)), stroke_width=2, stroke_fill=(0, 0, 0, int(120 * a)))
+        # soft dark shading behind the subtitle so it stays readable on bright photos
+        shade = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        ImageDraw.Draw(shade).rounded_rectangle(((W - tw) / 2 - 70, y - 40, (W + tw) / 2 + 70, y + 110), 60,
+                                                fill=(12, 8, 4, int(165 * a)))
+        img.alpha_composite(shade.filter(ImageFilter.GaussianBlur(28)))
+        d.text(((W - tw) / 2, y), text, font=f, fill=(255, 244, 226, int(255 * a)), stroke_width=3, stroke_fill=(0, 0, 0, int(190 * a)))
     else:  # kinetic-pop
         f = font("inter-black", 92)
         words = text.upper().split()
