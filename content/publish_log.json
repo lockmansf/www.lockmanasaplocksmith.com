@@ -158,6 +158,12 @@
           "reason": "Gemini HTTP 503: b'{\\n  \"error\": {\\n    \"code\": 503,\\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\\n    \"status\": \"UNAVAILABLE\"\\n  }\\n}\\n'"
         }
       ]
+    },
+    "2026-11-28": {
+      "target_hour": 20,
+      "attempts": 0,
+      "published": null,
+      "failures": []
     }
   },
   "used_topics": [
